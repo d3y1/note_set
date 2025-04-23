@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE buildprofiles SYSTEM "https://resources.jetbrains.com/writerside/1.0/build-profiles.dtd">
+<buildprofiles xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/build-profiles.xsd"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <variables>
+        <algolia-id>9TCXX9YCJY</algolia-id>
+        <algolia-index>NOTE_SET_INDEX</algolia-index>
+        <algolia-api-key>f37d2de2412a22de0f64f63e07fb6af1</algolia-api-key>
+        <algolia-show-logo>true</algolia-show-logo>
+    </variables>
+
+    <build-profile instance="NOTE_SET">
+        <variables>
+            <noindex-content>true</noindex-content>
+        </variables>
+    </build-profile>
+
+</buildprofiles>
