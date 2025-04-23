@@ -1,5 +1,8 @@
 # Build and publish on GitHub
 
+## Change source to GitHub Actions of build and deployment
+In your repository on GitHub, go to **Settings | Pages**, change source to **GitHub Actions**.
+
 ## Set up a GitHub Actions workflow
 
 1. In the root of your project, create the .github/workflows/ directory to store workflow files.
