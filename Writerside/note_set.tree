@@ -2,7 +2,7 @@
 <!DOCTYPE instance-profile
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
-<instance-profile id="NOTE_SET"
+<instance-profile id="note_set"
                  name="note_set"
                  start-page="Default-topic.md">
 
@@ -12,6 +12,9 @@
                 <toc-element topic="writerside.md">
                     <toc-element topic="build-and-publish.md">
                         <toc-element topic="Build-and-publish-on-GitHub.md"/>
+                    </toc-element>
+                    <toc-element topic="configure-search.md">
+                        <toc-element topic="Algolia-search.md"/>
                     </toc-element>
                 </toc-element>
             </toc-element>

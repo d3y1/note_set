@@ -10,7 +10,7 @@
         <algolia-show-logo>true</algolia-show-logo>
     </variables>
 
-    <build-profile instance="NOTE_SET">
+    <build-profile instance="note_set">
         <variables>
             <noindex-content>true</noindex-content>
         </variables>
