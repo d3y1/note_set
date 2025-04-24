@@ -5,14 +5,18 @@ In your repository on GitHub, go to **Settings | Pages**, change source to **Git
 
 ## Set up a GitHub Actions workflow
 
-1. In the root of your project, create the .github/workflows/ directory to store workflow files.
-
-2. In the .github/workflows/ directory, create a new YAML file named build-docs.yml.
+<procedure>
+    <step>
+        <p>In the root of your project, create the <path>.github/workflows/</path> directory to store workflow files.</p>
+    </step>
+    <step>
+        <p>In the <path>.github/workflows/</path> directory, create a new YAML file named <path>build-docs.yml</path>.</p>
+    </step>
+</procedure>
 
 ## Build documentation website
 
-> build-docs.yml
-
+#### build-docs.yml {collapsible="true" default-state="expanded"}
 ```yaml
 name: Build documentation
 
@@ -114,8 +118,7 @@ The place to get env.INSTANCE
 
 If you also configure Algolia search, you can modify the workflow further and add the publish-indexes job that will automatically update the search indexes after a successful deployment.
 
-> build-docs.yml
-
+#### build-docs.yml {collapsible="true" default-state="expanded"}
 ```yaml
 name: Build documentation
 
