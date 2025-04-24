@@ -109,8 +109,7 @@ jobs:
 ```
 {collapsible="true" collapsed-title="build-docs.yml" default-state="expanded"}
 
-The place to get env.INSTANCE
-![where_to_get_env_INSTANCE.png](where_to_get_env_INSTANCE.png)
+![place_to_get_env_INSTANCE.png](place_to_get_env_INSTANCE.png)
 
 
 
