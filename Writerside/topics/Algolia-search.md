@@ -32,7 +32,6 @@
 | algolia-api-key   | Algolia Search-Only API Key (public key)                                                                      |
 | algolia-show-logo | Show the Algolia logo in search results if you are using their free plan to comply with Algolia's usage terms |
 
-#### buildprofiles.xml {collapsible="true" default-state="expanded"}
 ```xml
 <variables>
     <algolia-id>9TCXX9YCJY</algolia-id>
@@ -41,6 +40,7 @@
     <algolia-show-logo>true</algolia-show-logo>
 </variables>
 ```
+{collapsible="true" collapsed-title="buildprofiles.xml" default-state="expanded"}
 
 ## Upload your search index records to Algolia
 

@@ -16,7 +16,6 @@ In your repository on GitHub, go to **Settings | Pages**, change source to **Git
 
 ## Build documentation website
 
-#### build-docs.yml {collapsible="true" default-state="expanded"}
 ```yaml
 name: Build documentation
 
@@ -108,6 +107,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 ```
+{collapsible="true" collapsed-title="build-docs.yml" default-state="expanded"}
 
 The place to get env.INSTANCE
 ![where_to_get_env_INSTANCE.png](where_to_get_env_INSTANCE.png)
@@ -118,7 +118,6 @@ The place to get env.INSTANCE
 
 If you also configure Algolia search, you can modify the workflow further and add the publish-indexes job that will automatically update the search indexes after a successful deployment.
 
-#### build-docs.yml {collapsible="true" default-state="expanded"}
 ```yaml
 name: Build documentation
 
@@ -258,3 +257,4 @@ jobs:
             2>&1 | tee algolia-update-index-log.txt
           fi
 ```
+{collapsible="true" collapsed-title="build-docs.yml" default-state="expanded"}
