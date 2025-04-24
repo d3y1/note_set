@@ -21,8 +21,8 @@
             <toc-element topic="os.md">
                 <toc-element topic="win10.md">
                     <toc-element topic="powershell.md">
-                        <toc-element topic="Set-proxy.md"/>
                     </toc-element>
+                    <toc-element topic="Set-proxy.md"/>
                 </toc-element>
             </toc-element>
         </toc-element>
