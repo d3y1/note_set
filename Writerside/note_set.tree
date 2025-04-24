@@ -24,7 +24,9 @@
                         <toc-element topic="Set-proxy.md"/>
                     </toc-element>
                     <toc-element topic="wsl2.md">
-                        <toc-element topic="Install-Ubuntu-24-04.md"/>
+                        <toc-element topic="Install-Ubuntu-24-04.md">
+                            <toc-element topic="Set-proxy-on-Ubuntu-terminal.md"/>
+                        </toc-element>
                     </toc-element>
                 </toc-element>
             </toc-element>
