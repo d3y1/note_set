@@ -11,6 +11,7 @@
             <toc-element topic="diagram.md">
                 <toc-element topic="ai.md">
                     <toc-element topic="agent.md">
+                        <toc-element topic="RAG部署本地知识库.md"/>
                         <toc-element topic="PEFT模型微调及推理验证.md"/>
                         <toc-element topic="Llama3模型微调量化部署.md"/>
                     </toc-element>
