@@ -7,6 +7,11 @@
                  start-page="Default-topic.md">
 
     <toc-element topic="Default-topic.md">
+        <toc-element topic="script.md">
+            <toc-element topic="python.md">
+                <toc-element topic="Nowcoder-export-solutions.md"/>
+            </toc-element>
+        </toc-element>
         <toc-element topic="algorithm.md">
             <toc-element topic="taocp.md">
                 <toc-element topic="sort.md">
