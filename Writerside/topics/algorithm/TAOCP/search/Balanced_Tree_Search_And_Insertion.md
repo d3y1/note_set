@@ -63,14 +63,16 @@ RLINK(T) <-- P, otherwise set LLINK(T) <-- P. **|**
 
 ---
 #Flow diagram
-![这里写图片描述](https://img-blog.csdn.net/20151106155707619)
+
+![flow_diagram_bt.png](flow_diagram_bt.png)flow_diagram_balanced_tree.png
+
 
 ---
 #Balanced tree
-![这里写图片描述](https://img-blog.csdn.net/20151106155723168) 
 
-![这里写图片描述](https://img-blog.csdn.net/20151106155739347)
+![balanced_tree.png](balanced_tree.png)
 
+![balanced_tree_1.png](balanced_tree_1.png)
 
 ---
 #Java program

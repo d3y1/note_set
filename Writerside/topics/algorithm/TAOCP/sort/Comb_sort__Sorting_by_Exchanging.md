@@ -5,6 +5,7 @@
 ---
 ##Animation
 ![comb sort](https://img-blog.csdn.net/20151112192110878)
+![comb_sort.png](comb_sort.png)
 Visualisation of Comb sort
 
 ---

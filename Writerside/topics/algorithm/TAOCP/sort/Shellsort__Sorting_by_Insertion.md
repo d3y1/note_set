@@ -5,7 +5,7 @@
 ---
 
 ##Animation
-![shellsort](https://img-blog.csdn.net/20151114112748347)
+![shell_sort](https://img-blog.csdn.net/20151114112748347)
 Shellsort with gaps 23, 10, 4, 1 in action.
 
 ---

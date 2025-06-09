@@ -24,8 +24,7 @@ N <-- N + 1, mark TABLE[i] occupied, and set KEY[i] <-- K. **|**
 
 ---
 #Linear open addressing
-![这里写图片描述](https://img-blog.csdn.net/20151106160154321)
-
+![linear_open_addressing.png](linear_open_addressing.png)
 
 ---
 #Java program

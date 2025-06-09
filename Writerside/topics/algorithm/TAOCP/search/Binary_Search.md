@@ -16,16 +16,18 @@ algorithm terminates successfully.
 
 ---
 #Flow diagram
-![这里写图片描述](https://img-blog.csdn.net/20151106154938523)
+
+![flow_diagram.png](flow_diagram.png)
 
 ---
 #Data table
-![这里写图片描述](https://img-blog.csdn.net/20151106154955446)
 
+![data_table.png](data_table.png)
 
 ---
 #Comparison tree
-![这里写图片描述](https://img-blog.csdn.net/20151106155014598)
+
+![comparison_tree.png](comparison_tree.png)
 
 ---
 #Java program

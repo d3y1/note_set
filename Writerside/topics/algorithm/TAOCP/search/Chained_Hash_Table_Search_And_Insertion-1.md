@@ -27,12 +27,11 @@ and LINK[i] <-- 0. **|**
 
 ---
 #Flow diagram
-![这里写图片描述](https://img-blog.csdn.net/20151106155920605)
- 
+ ![flow_diagram_chained_hash_table.png](flow_diagram_chained_hash_table.png)
 
 ---
 #Coalesced chaining
-![这里写图片描述](https://img-blog.csdn.net/20151106155944136)
+![coalesced_chaining.png](coalesced_chaining.png)
 
 ---
 #Java program

@@ -20,7 +20,7 @@ set m <-- floor(m/2) and return to U2. **|**
 
 ---
 #Comparison tree
-![这里写图片描述](https://img-blog.csdn.net/20151106155113872)
+![comparison_tree_for_uniform_binary_search.png](comparison_tree_for_uniform_binary_search.png)
 
 ---
 #Java program

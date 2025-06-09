@@ -28,7 +28,7 @@ terminate the algorithm successfully.) **|**
 
 ---
 #Flow diagram
-![这里写图片描述](https://img-blog.csdn.net/20151106155547082)
+![tree_search_and_insert.png](tree_search_and_insert.png)
 
 ---
 #Java program

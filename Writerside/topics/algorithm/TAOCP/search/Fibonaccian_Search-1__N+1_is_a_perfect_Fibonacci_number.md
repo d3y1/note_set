@@ -18,8 +18,7 @@ set i <-- i + q, p <-- p - q, then q <-- q - p, and return to F2. **|**
 
 ---
 #Fibonacci tree
-![这里写图片描述](https://img-blog.csdn.net/20151106155326701)
-
+![the_fibonacci_tree.png](the_fibonacci_tree.png)
 
 ---
 #Java program

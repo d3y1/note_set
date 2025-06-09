@@ -42,7 +42,7 @@ q = 0, set |LS| <-- p, |Lt| <-- 0 and return to L2. Otherwise return to L3. **|*
 
 ---
 #Data table
-![这里写图片描述](https://img-blog.csdn.net/20151106154411576)
+![list_merge_sorting.png](list_merge_sorting.png)
 
 ---
 #Java program

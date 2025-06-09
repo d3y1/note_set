@@ -1,8 +1,7 @@
 # Chained_Hash_Table_Search_And_Insertion-2_(1)
 
 ﻿#Separate chaining
-![Chained Hash Table Search And Insertion-2:Searching](https://img-blog.csdn.net/20151106160051489)
-
+![separate_chaining.png](separate_chaining.png)
 ---
 #Java program
 In this program, **R1,...,RN** were simplified to **K1,...,KN**.

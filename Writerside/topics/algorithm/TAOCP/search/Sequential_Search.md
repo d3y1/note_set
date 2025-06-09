@@ -12,7 +12,7 @@ unsuccessfully. **|**
 
 ---
 #Flow diagram
-![这里写图片描述](https://img-blog.csdn.net/20151106154747814)
+![sequential_or_house_to_house_searching.png](sequential_or_house_to_house_searching.png)
 
 ---
 #Java program

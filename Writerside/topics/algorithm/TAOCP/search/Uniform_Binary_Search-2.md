@@ -15,7 +15,7 @@ Otherwise, set i <-- i+DELTA[j] , j <-- j + 1, and go to C2. **|**
 
 ---
 #Comparison tree
-![Uniform Binary Search-2:Searching](https://img-blog.csdn.net/20151106155214133)
+![comparison_tree_for_uniform_binary_search_2.png](comparison_tree_for_uniform_binary_search_2.png)
 
 ---
 #Java program

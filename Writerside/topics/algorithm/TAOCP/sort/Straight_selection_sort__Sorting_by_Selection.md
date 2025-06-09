@@ -5,7 +5,7 @@
 ---
 
 ##Animation
-![straight selection sort](https://img-blog.csdn.net/20151113124611426)
+![straight selection_sort](https://img-blog.csdn.net/20151113124611426)
 Selection sort animation
 
 ---
