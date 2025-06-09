@@ -116,5 +116,4 @@ Sorted Ks:
 
 ---
 #Reference
-https://zh.wikipedia.org/wiki/%E5%A5%87%E5%81%B6%E6%8E%92%E5%BA%8F
 https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort

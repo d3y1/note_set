@@ -142,5 +142,4 @@ Sorted keys:
 ---
 #Reference
 << The art of computer programming: Sorting and Searching >> VOLUME 3, DONALD E. KNUTH
-https://zh.wikipedia.org/wiki/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F
 https://en.wikipedia.org/wiki/Counting_sort
