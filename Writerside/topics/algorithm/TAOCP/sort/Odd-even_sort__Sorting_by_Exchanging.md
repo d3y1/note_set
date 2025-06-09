@@ -113,7 +113,3 @@ Sorted Ks:
 15:897
 16:908
 ```
-
----
-#Reference
-https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort
