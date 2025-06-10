@@ -9,6 +9,7 @@
     <toc-element topic="Default-topic.md">
         <toc-element topic="script.md">
             <toc-element topic="python.md">
+                <toc-element topic="Selenium-auto-import-md-files.md"/>
                 <toc-element topic="Nowcoder-export-solutions.md"/>
             </toc-element>
         </toc-element>
