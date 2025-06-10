@@ -1,4 +1,4 @@
-# Nowcoder export solutions and convert to md file
+# Nowcoder export solutions and convert to md files
 
 牛客 https://www.nowcoder.com/
 

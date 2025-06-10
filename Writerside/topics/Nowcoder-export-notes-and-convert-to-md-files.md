@@ -1,4 +1,4 @@
-# Nowcoder export notes and convert to md file
+# Nowcoder export notes and convert to md files
 
 导出全部笔记 转为md文件
 
