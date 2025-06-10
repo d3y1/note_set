@@ -1,6 +1,6 @@
 # Selenium auto import md files
 
-```Python
+```python
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
