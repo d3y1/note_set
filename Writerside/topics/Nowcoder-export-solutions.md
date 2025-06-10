@@ -1,10 +1,22 @@
-# Nowcoder export solutions
+# Nowcoder export solutions and convert to md file
 
 牛客 https://www.nowcoder.com/
 
-导出全部题解 存为md文件
+导出全部题解 转为md文件
 
-```python
+<procedure>
+   <step>
+      <p>‌获取数据‌：requests(HTTP请求工具) → 发送请求获取网页HTML或者JSON返回值</p>
+   </step>
+   <step>
+      <p>‌提取数据‌：BeautifulSoup(HTML/XML解析器) → 解析HTML，定位目标元素</p>
+   </step>
+   <step>
+      <p>‌清洗数据‌：html2text(HTML转纯文本工具) → 将提取的HTML片段转为纯文本</p>
+   </step>
+</procedure>
+
+```Python
 
 import requests
 from bs4 import BeautifulSoup
