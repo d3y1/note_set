@@ -30,7 +30,6 @@ public class Solution {
      * @return long长整型
      */
     public long calArray (ArrayList<Integer> nums) {
-        // return solution1(nums);
         // return solution2(nums);
         // return solution3(nums);
         // return solution4(nums);
@@ -38,60 +37,7 @@ public class Solution {
         // return solution444(nums);
         return solution5(nums);
     }
-
-    /**
-     * 二分: 超时!
-     * @param nums
-     * @return
-     */
-    private long solution1(ArrayList<Integer> nums){
-        long result = 0;
-        int n = nums.size();
-
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(nums.get(0));
-
-        // pos: 当前num(target)插入list位置(索引)
-        int left,right,mid,last,target,pos,sum;
-        for(int i=1; i<n; i++){
-            last = list.get(i-1);
-            target = nums.get(i);
-            sum = 0;
-            // 直接附加
-            if(last <= target){
-                pos = i;
-                list.add(pos, target);
-            }
-            // 二分查找
-            else{
-                left = 0;
-                right = i-1;
-                while(left <= right){
-                    mid = (left+right)>>1;
-                    if(list.get(mid) <= target){
-                        left = mid+1;
-                    }else if(list.get(mid) > target){
-                        right = mid-1;
-                    }
-                }
-
-                pos = left;
-                list.add(pos, target);
-            }
-
-            // 求和(小于等于当前num(target))
-            for(int j=0; j<pos; j++){
-                sum += list.get(j);
-            }
-
-            result += sum;
-        }
-
-        return result;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    
     /**
      * 树状数组(Binary Indexed Tree)(也称Fenwick树): 动态维护前缀和
      *
