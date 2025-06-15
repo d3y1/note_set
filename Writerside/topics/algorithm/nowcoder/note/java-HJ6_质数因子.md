@@ -1,4 +1,4 @@
-# java - HJ6 质数因子
+# java-HJ6 质数因子
 
 
     import java.util.Scanner;

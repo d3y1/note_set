@@ -1,4 +1,4 @@
-# java - HJ1 字符串最后一个单词的长度
+# java-HJ1 字符串最后一个单词的长度
 
 
     import java.util.Scanner;

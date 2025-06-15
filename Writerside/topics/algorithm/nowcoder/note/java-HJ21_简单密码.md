@@ -1,4 +1,4 @@
-# java - HJ21 简单密码
+# java-HJ21 简单密码
 
 
     import java.util.HashMap;

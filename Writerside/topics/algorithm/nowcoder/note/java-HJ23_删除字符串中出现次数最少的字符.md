@@ -1,4 +1,4 @@
-# java - HJ23 删除字符串中出现次数最少的字符
+# java-HJ23 删除字符串中出现次数最少的字符
 
 
     import java.util.ArrayList;

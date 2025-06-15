@@ -1,4 +1,4 @@
-# java - HJ22 汽水瓶
+# java-HJ22 汽水瓶
 
 
     import java.util.Scanner;

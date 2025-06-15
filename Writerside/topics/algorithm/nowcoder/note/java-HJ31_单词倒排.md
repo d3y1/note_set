@@ -1,4 +1,4 @@
-# java - HJ31 单词倒排
+# java-HJ31 单词倒排
 
 
     import java.util.Scanner;

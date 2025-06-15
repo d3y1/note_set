@@ -1,4 +1,4 @@
-# java - HJ35 蛇形矩阵
+# java-HJ35 蛇形矩阵
 
 
     import java.util.Scanner;

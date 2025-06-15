@@ -1,4 +1,4 @@
-# java - HJ10 字符个数统计
+# java-HJ10 字符个数统计
 
 
     import java.util.HashSet;

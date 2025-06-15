@@ -1,4 +1,4 @@
-# java - HJ4 字符串分隔
+# java-HJ4 字符串分隔
 
 
     import java.util.Scanner;

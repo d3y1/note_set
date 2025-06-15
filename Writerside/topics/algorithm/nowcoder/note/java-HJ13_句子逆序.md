@@ -1,4 +1,4 @@
-# java - HJ13 句子逆序
+# java-HJ13 句子逆序
 
 
     import java.util.Scanner;

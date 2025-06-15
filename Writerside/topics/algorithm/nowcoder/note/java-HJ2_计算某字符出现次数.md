@@ -1,4 +1,4 @@
-# java - HJ2 计算某字符出现次数
+# java-HJ2 计算某字符出现次数
 
 
     import java.util.Scanner;

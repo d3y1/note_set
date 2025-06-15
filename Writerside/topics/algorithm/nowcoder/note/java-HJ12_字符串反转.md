@@ -1,4 +1,4 @@
-# java - HJ12 字符串反转
+# java-HJ12 字符串反转
 
 
     import java.util.Scanner;

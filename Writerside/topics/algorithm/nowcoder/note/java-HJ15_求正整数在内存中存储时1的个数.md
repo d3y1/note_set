@@ -1,4 +1,4 @@
-# java - HJ15 求正整数在内存中存储时1的个数
+# java-HJ15 求正整数在内存中存储时1的个数
 
 
     import java.util.Scanner;

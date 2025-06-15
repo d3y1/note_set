@@ -1,4 +1,4 @@
-# java - HJ40 统计字符
+# java-HJ40 统计字符
 
 
     import java.util.HashMap;

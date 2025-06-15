@@ -1,4 +1,4 @@
-# java - HJ11 数字颠倒
+# java-HJ11 数字颠倒
 
 
     import java.util.Scanner;
