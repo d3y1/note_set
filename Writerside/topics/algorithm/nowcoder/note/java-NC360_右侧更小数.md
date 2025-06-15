@@ -41,7 +41,6 @@ public class Solution {
         // return solution3(nums);
         // return solution4(nums);
         // return solution44(nums);
-        // return solution444(nums);
         return solution5(nums);
     }
 
@@ -311,117 +310,6 @@ public class Solution {
             // 线段树id
             int id = getIdByNum(num);
             // 根据id获取区间和 严格小于(id-1) range: left<=right
-            result[i] += rangeSum(0, id-1);
-            // 更新前缀和
-            modify(id, 1);
-        }
-
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        for(int cnt : result){
-            list.add(cnt);
-        }
-
-        return list;
-    }
-
-    /**
-     * 更新: 根据id进行更新(单点修改)
-     * @param id
-     * @param val
-     */
-    public void modify(int id, int val) {
-        modify(id, id, val, 0, 0, n);
-    }
-
-    /**
-     * 递归: 更新线段树(区间修改)
-     * @param left
-     * @param right
-     * @param val
-     * @param root
-     * @param start
-     * @param end
-     */
-    private void modify(int left, int right, int val, int root, int start, int end){
-        // [left, right]:   修改区间
-        // [start, end]: 当前节点区间
-        if(left<=start && end<=right){
-            segmentTree[root] += (end-start+1)*val;
-            return;
-        }
-
-        int mid = start+(end-start)/2;
-        if(left <= mid){
-            modify(left, right, val, root*2+1, start, mid);
-        }
-        if(right > mid){
-            modify(left, right, val, root*2+2, mid+1, end);
-        }
-
-        segmentTree[root] = segmentTree[root*2+1]+segmentTree[root*2+2];
-    }
-
-    /**
-     * 区间和(区间查询)
-     * @param left
-     * @param right
-     * @return
-     */
-    public int rangeSum(int left, int right) {
-        return rangeSum(left, right, 0, 0, n);
-    }
-
-    /**
-     * 递归: 区间和
-     * @param left
-     * @param right
-     * @param root
-     * @param start
-     * @param end
-     * @return
-     */
-    private int rangeSum(int left, int right, int root, int start, int end){
-        // [left, right]:   查询区间
-        // [start, end]: 当前节点区间
-        if(left<=start && end<=right){
-            return segmentTree[root];
-        }
-
-        int mid = start+(end-start)/2;
-
-        int sum = 0;
-        if(left <= mid){
-            sum += rangeSum(left, right, root*2+1, start, mid);
-        }
-        if(right > mid){
-            sum += rangeSum(left, right, root*2+2, mid+1, end);
-        }
-
-        return sum;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * 线段树(Segment Tree): 数组实现(堆式存储)
-     * @param nums
-     * @return
-     */
-    private ArrayList<Integer> solution44(ArrayList<Integer> nums){
-        n = nums.size();
-        result = new int[n];
-        segmentTree = new int[n*4+1];
-
-        // 离散化处理
-        discrete(nums);
-
-        int num;
-        // 从后往前遍历
-        for(int i=n-1; i>=0; i--){
-            num = nums.get(i);
-            // 线段树id
-            int id = getIdByNum(num);
-            // 根据id获取区间和 严格小于(id-1) range: left<=right
             result[i] += querySum(0, id-1);
             // 更新前缀和
             change(id, 1);
@@ -518,7 +406,7 @@ public class Solution {
      * @param nums
      * @return
      */
-    private ArrayList<Integer> solution444(ArrayList<Integer> nums){
+    private ArrayList<Integer> solution44(ArrayList<Integer> nums){
         n = nums.size();
         result = new int[n];
         segTree = new SegNode[n*4+1];
