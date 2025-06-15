@@ -428,5 +428,4 @@ public class Solution {
         return matrix;
     }
 }
-Copied!
 ```
