@@ -1,0 +1,61 @@
+# java-NC254 合法的三角形个数
+
+
+    import java.util.*;
+    
+    /**
+     * NC254 合法的三角形个数
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组 
+         * @return int整型
+         */
+        public int validTriangleNumber (int[] nums) {
+            return solution(nums);
+        }
+    
+        /**
+         * 二分
+         * @param nums
+         * @return
+         */
+        private int solution(int[] nums){
+            Arrays.sort(nums);
+            
+            int n = nums.length;
+            int result = 0;
+            int target;
+            int left,right,mid;
+            // 三角形两边之和大于第三边
+            for(int i=0; i<n; i++){
+                for(int j=i+1; j<n; j++){
+                    // 两条短边之和
+                    target = nums[i]+nums[j];
+                    // 二分
+                    left = j+1;
+                    right = n-1;
+                    while(left <= right){
+                        mid = (left+right)/2;
+                        if(nums[mid] < target){
+                            left = mid+1;
+                        }else{
+                            right = mid-1;
+                        }
+                    }
+    
+                    // 可选第三边个数
+                    result += (left-j-1);
+                }
+            }
+    
+            return result;
+        }
+    }
+
+  
+

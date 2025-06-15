@@ -1,0 +1,130 @@
+# java-NC146 循环右移二叉树
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC146 循环右移二叉树
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * @param root TreeNode类
+         * @param k int整型
+         * @return TreeNode类
+         */
+        public TreeNode cyclicShiftTree (TreeNode root, int k) {
+            return solution(root, k);
+        }
+    
+        /**
+         * 层序遍历
+         * @param root
+         * @param k
+         * @return
+         */
+        private TreeNode solution(TreeNode root, int k){
+            if(root == null){
+                return null;
+            }
+    
+            Queue<QueueNode> queue = new LinkedList<>();
+            // level -> count
+            HashMap<Integer,Integer> cntMap = new HashMap<>();
+            // level+seq -> treeNode
+            HashMap<String,TreeNode> treeNodeMap = new HashMap<>();
+    
+            // 树的层级 从1开始
+            int level = 1;
+            // 当前节点 对应父层节点的索引位置 从0开始
+            int index = 0;
+            // 当前层级 实际节点数目
+            int count = 1;
+            // 当前层级 实际节点序号(count-1) 从0开始
+            int seq = 0;
+            queue.offer(new QueueNode(root, level, index, seq));
+            cntMap.put(level, count);
+    
+            int size,kIdx,upCnt,upSeq,upDirect;
+            QueueNode queueNode;
+            TreeNode treeNode,upTreeNode;
+            while(!queue.isEmpty()){
+                size = queue.size();
+                level++;
+                index = 0;
+                count = 0;
+                while(size-- > 0){
+                    queueNode = queue.poll();
+                    treeNode = queueNode.treeNode;
+                    // 加入队列
+                    if(treeNode.left != null){
+                        count++;
+                        queue.offer(new QueueNode(treeNode.left, level, index, count-1));
+                    }
+                    index++;
+    
+                    if(treeNode.right != null){
+                        count++;
+                        queue.offer(new QueueNode(treeNode.right, level, index, count-1));
+                    }
+                    index++;
+    
+                    treeNode.left = null;
+                    treeNode.right = null;
+                    treeNodeMap.put(queueNode.level+"-"+queueNode.seq, treeNode);
+    
+                    // 向右循环移动k位
+                    if(queueNode.level > 1){
+                        // 上层(父层) 实际节点数目
+                        upCnt = cntMap.get(queueNode.level-1);
+                        // 向右循环移动k位 到达的位置索引
+                        kIdx = (queueNode.index+k)%(upCnt*2);
+                        // 对应的 上层(父层) 节点序号
+                        upSeq = kIdx/2;
+                        // 判断左右节点
+                        upDirect = kIdx%2;
+                        // 根据 父层层级+节点序号 找到对应的应该挂载的父节点
+                        upTreeNode = treeNodeMap.get((queueNode.level-1)+"-"+upSeq);
+                        // 进行挂载
+                        if(upDirect == 0){
+                            upTreeNode.left = treeNode;
+                        }else{
+                            upTreeNode.right = treeNode;
+                        }
+                    }
+                }
+                cntMap.put(level, count);
+            }
+    
+            return root;
+        }
+    
+        private class QueueNode{
+            TreeNode treeNode;
+            int level;
+            int index;
+            int seq;
+            public QueueNode(TreeNode treeNode, int level, int index, int seq){
+                this.treeNode = treeNode;
+                this.level = level;
+                this.index = index;
+                this.seq = seq;
+            }
+        }
+    }
+
+  
+

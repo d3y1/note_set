@@ -1,0 +1,116 @@
+# java-NC184 判断是不是二叉搜索树
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC184 判断是不是二叉搜索树
+     * @author d3y1
+     */
+    public class Solution {
+        private boolean isBST = true;
+        
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param root TreeNode类
+         * @return bool布尔型
+         */
+        public boolean isValidBST (TreeNode root) {
+            // return solution1(root);
+            return solution2(root);
+        }
+    
+        private TreeNode preNode;
+    
+        /**
+         * 递归
+         * @param root
+         * @return
+         */
+        private boolean solution1(TreeNode root){
+            inOrder(root);
+            return isBST;
+        }
+    
+        /**
+         * 中序遍历
+         * @param root
+         */
+        private void inOrder(TreeNode root){
+            if(!isBST){
+                return;
+            }
+            if(root == null){
+                return;
+            }
+    
+            inOrder(root.left);
+            if(preNode == null){
+                preNode = root;
+            }else{
+                if(preNode.val >= root.val){
+                    isBST = false;
+                    return;
+                }else{
+                    preNode = root;
+                }
+            }
+            inOrder(root.right);
+        }
+    
+        ////////////////////////////////////////////////////////////////////////////////////////
+        
+        private Integer preVal = null;
+    
+        /**
+         * 递归
+         * @param root
+         * @return
+         */
+        private boolean solution2(TreeNode root){
+            inorder(root);
+            return isBST;
+        }
+    
+        /**
+         * 中序遍历
+         * @param root
+         */
+        private void inorder(TreeNode root){
+            if(!isBST){
+                return;
+            }
+            if(root == null){
+                return;
+            }
+    
+            inorder(root.left);
+            if(preVal == null){
+                preVal = root.val;
+            }else{
+                if(preVal >= root.val){
+                    isBST = false;
+                    return;
+                }else{
+                    preVal = root.val;
+                }
+            }
+            inorder(root.right);
+        }
+    }
+
+  
+

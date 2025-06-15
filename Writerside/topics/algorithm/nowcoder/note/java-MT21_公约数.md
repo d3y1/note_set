@@ -1,0 +1,68 @@
+# java-MT21 公约数
+
+
+    import java.util.Scanner;
+    
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution(in);
+            }
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[j][x]表示选择j张牌且这些牌上数字的乘积与A的最大公约数为x的方案数
+         *
+         * dp[j+1][gcd(a/x, cards[i])*x] += dp[j][x]
+         *
+         * @param in
+         */
+        private static void solution(Scanner in){
+            int n = in.nextInt();
+            int k = in.nextInt();
+            int a = in.nextInt();
+            int b = in.nextInt();
+    
+            int[] cards = new int[n+1];
+            for(int i=1; i<=n; i++){
+                cards[i] = in.nextInt();
+            }
+    
+            long[][] dp = new long[n+1][a+1];
+            dp[1][gcd(cards[1], a)] = 1;
+            for(int i=2; i<=n; i++){
+                for(int j=i-1; j>0; j--){
+                    for(int x=a; x>0; x--){
+                        if(dp[j][x] != 0){
+                            dp[j+1][gcd(a/x, cards[i])*x] += dp[j][x];
+                        }
+                    }
+                }
+                dp[1][gcd(cards[i], a)] += 1;
+            }
+    
+            long result = 0;
+            for(int i=b; i<=a; i++){
+                result += dp[k][i];
+            }
+    
+            System.out.println(result);
+        }
+    
+        /**
+         * 最大公约数
+         * @param a
+         * @param b
+         * @return
+         */
+        private static int gcd(int a, int b){
+            return b>0 ? gcd(b, a%b) : a;
+        }
+    }
+
+  
+

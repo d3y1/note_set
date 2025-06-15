@@ -1,0 +1,116 @@
+# java-ZJ14 选区间
+
+
+    import java.util.ArrayDeque;
+    import java.util.Arrays;
+    import java.util.Deque;
+    import java.util.HashMap;
+    import java.util.Map;
+    import java.util.Scanner;
+    
+    public class Main {
+        private static int N;
+        private static int[] dp;
+    
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                // solution2(in);
+            }
+        }
+    
+        /**
+         * 模拟法: 单调栈
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            N = in.nextInt();
+    
+            int[] nums = new int[N+1];
+            for(int i=1; i<=N; i++){
+                nums[i] = in.nextInt();
+            }
+    
+            Map<Integer, Integer> rightMap = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> leftMap = new HashMap<Integer, Integer>();
+            Deque<Integer> rightStack = new ArrayDeque<Integer>();
+            Deque<Integer> leftStack = new ArrayDeque<Integer>();
+            int num;
+            for (int i=N; i>=1; i--){
+                // 找到当前元素右边第一个小于当前元素的元素索引 N+1:表示没找到, 当前元素右边都比当前元素大
+                num = nums[i];
+                while (!rightStack.isEmpty() && num<=nums[rightStack.peek()]){
+                    rightStack.pop();
+                }
+                rightMap.put(i, rightStack.isEmpty() ? N+1 : rightStack.peek());
+                rightStack.push(i);
+    
+                // 找到当前元素左边第一个小于当前元素的元素索引 0:表示没找到, 当前元素左边都比当前元素大
+                num = nums[N-i+1];
+                while (!leftStack.isEmpty() && num<=nums[leftStack.peek()]){
+                    leftStack.pop();
+                }
+                leftMap.put(N-i+1, leftStack.isEmpty() ? 0 : leftStack.peek());
+                leftStack.push(N-i+1);
+            }
+            
+            dp = new int[N+1];
+            for(int i=1; i<=N; i++){
+                dp[i] = dp[i-1] + nums[i];
+            }
+    
+            long result = 0;
+            for(int i=1; i<=N; i++){
+                result = Math.max(result, (long) nums[i] * (dp[rightMap.get(i)-1]-dp[leftMap.get(i)]));
+            }
+    
+            System.out.println(result);
+        }
+    
+        /**
+         * 模拟法: 循坏遍历
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            N = in.nextInt();
+    
+            int[] nums = new int[N+1];
+            for(int i=1; i<=N; i++){
+                nums[i] = in.nextInt();
+            }
+    
+            dp = new int[N+1];
+            for(int i=1; i<=N; i++){
+                dp[i] = dp[i-1] + nums[i];
+            }
+    
+            long result = 0;
+            for(int i=1; i<=N; i++){
+                result = Math.max(result, compute(nums, i));
+            }
+    
+            System.out.println(result);
+        }
+    
+        private static long compute(int[] nums, int i){
+            int left = i-1;
+            int right = i+1;
+    
+            // 找到当前元素左边第一个小于当前元素的元素索引 0:表示没找到, 当前元素左边都比当前元素大
+            while(left>0 && nums[i]<=nums[left]){
+                left--;
+            }
+    
+            // 找到当前元素右边第一个小于当前元素的元素索引 N+1:表示没找到, 当前元素右边都比当前元素大
+            while(right<=N && nums[i]<=nums[right]){
+                right++;
+            }
+    
+            return (long) nums[i] * (dp[right-1]-dp[left]);
+        }
+    }
+
+  
+

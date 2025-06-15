@@ -1,0 +1,225 @@
+# java-NC41 最长无重复子数组
+
+
+    import java.util.*;
+    
+    /**
+     * NC41 最长无重复子数组
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param arr int整型一维数组 the array
+         * @return int整型
+         */
+        public int maxLength (int[] arr) {
+            // return solution1(arr);
+            // return solution11(arr);
+            return solution111(arr);
+            // return solution1111(arr);
+            // return solution11111(arr);
+            // return solution111111(arr);
+            // return solution2(arr);
+            // return solution3(arr);
+        }
+    
+        /**
+         * 双指针+哈希(HashMap)
+         * @param arr
+         * @return
+         */
+        private int solution1(int[] arr){
+            int n = arr.length;
+            // 哈希
+            HashMap<Integer,Integer> map = new HashMap<>();
+            int result = 0;
+            int key;
+            // 双指针
+            for(int i=0,j=0; i<=j&&j<n; j++){
+                key = arr[j];
+                // 注意测试用例: [1,2,2,3,3,4,2,3]
+                if(!map.containsKey(key) || map.get(key)==0){
+                    map.put(key, 1);
+                    result = Math.max(result, j-i+1);
+                }else{
+                    map.put(key, map.get(key)+1);
+                    while(map.get(key) > 1){
+                        map.put(arr[i], map.get(arr[i++])-1);
+                    }
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 双指针+哈希(HashMap)
+         * @param arr
+         * @return
+         */
+        private int solution11(int[] arr){
+            int n = arr.length;
+            // 哈希
+            HashMap<Integer,Integer> map = new HashMap<>();
+            int result = 0;
+            int key;
+            // 双指针
+            for(int i=0,j=0; i<=j&&j<n; j++){
+                key = arr[j];
+                while(map.containsKey(key)){
+                    map.remove(arr[i++]);
+                }
+                map.put(key, j);
+                result = Math.max(result, j-i+1);
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 双指针+哈希(HashSet)
+         * @param arr
+         * @return
+         */
+        private int solution111(int[] arr){
+            int n = arr.length;
+            // 哈希
+            HashSet<Integer> set = new HashSet<>();
+            int result = 0;
+            int key;
+            // 双指针
+            for(int i=0,j=0; i<=j&&j<n; j++){
+                key = arr[j];
+                while(set.contains(key)){
+                    set.remove(arr[i++]);
+                }
+                set.add(key);
+                result = Math.max(result, j-i+1);
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 双指针+哈希(HashSet)
+         * @param arr
+         * @return
+         */
+        private int solution1111(int[] arr){
+            int n = arr.length;
+            // 哈希
+            HashSet<Integer> set = new HashSet<>();
+            int result = 0;
+            int key;
+            // 双指针
+            for(int i=0,j=0; i<=j&&j<n;){
+                key = arr[j];
+                if(set.contains(key)){
+                    set.remove(arr[i++]);
+                }else{
+                    set.add(key);
+                    j++;
+                    result = Math.max(result, set.size());
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 双指针+哈希(HashSet)
+         * @param arr
+         * @return
+         */
+        private int solution11111(int[] arr){
+            int n = arr.length;
+            // 哈希
+            HashSet<Integer> set = new HashSet<>();
+            int result = 0;
+            // 双指针
+            for(int i=0,j=0; i<=j&&j<n;){
+                if(set.contains(arr[j])){
+                    set.remove(arr[i++]);
+                }else{
+                    set.add(arr[j++]);
+                    result = Math.max(result, set.size());
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 双指针+哈希(HashSet)
+         * @param arr
+         * @return
+         */
+        private int solution111111(int[] arr){
+            int n = arr.length;
+            // 哈希
+            HashSet<Integer> set = new HashSet<>();
+            int result = 0;
+            // 双指针
+            int i = 0;
+            int j = 0;
+            while(i<=j && j<n){
+                if(set.contains(arr[j])){
+                    set.remove(arr[i++]);
+                }else{
+                    set.add(arr[j++]);
+                    result = Math.max(result, set.size());
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 双指针+哈希(HashMap)
+         * @param arr
+         * @return
+         */
+        private int solution2(int[] arr){
+            int n = arr.length;
+            // 哈希
+            HashMap<Integer,Integer> map = new HashMap<>();
+            int result = 0;
+            int key;
+            // 双指针
+            for(int i=0,j=0; i<=j&&j<n; j++){
+                key = arr[j];
+                if(map.containsKey(key)){
+                    i = Math.max(i, map.get(key)+1);
+                }
+                map.put(key, j);
+                result = Math.max(result, j-i+1);
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 队列
+         * @param arr
+         * @return
+         */
+        private int solution3(int[] arr){
+            Queue<Integer> queue = new LinkedList<>();
+            int result = 0;
+            for(int num: arr){
+                while(queue.contains(num)){
+                    queue.poll();
+                }
+                queue.offer(num);
+                result = Math.max(result, queue.size());
+            }
+    
+            return result;
+        }
+    }
+
+  
+

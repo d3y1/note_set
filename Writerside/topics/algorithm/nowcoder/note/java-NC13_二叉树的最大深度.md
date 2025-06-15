@@ -1,0 +1,88 @@
+# java-NC13 二叉树的最大深度
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC13 二叉树的最大深度
+     * @author d3y1
+     */
+    public class Solution {
+        private int result = 0;
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 程序人口
+         *
+         * @param root TreeNode类
+         * @return int整型
+         */
+        public int maxDepth (TreeNode root) {
+            return solution1(root);
+            // return solution2(root);
+        }
+    
+        /**
+         * dfs
+         * @param root
+         * @return
+         */
+        private int solution1(TreeNode root){
+            return depth(root);
+        }
+    
+        /**
+         * 递归
+         * @param root
+         * @return
+         */
+        private int depth(TreeNode root){
+            if(root == null){
+                return 0;
+            }
+            
+            return Math.max(depth(root.left), depth(root.right))+1;
+        }
+    
+        /**
+         * dfs
+         * @param root
+         * @return
+         */
+        private int solution2(TreeNode root){
+            operate(root, 0);
+    
+            return result;
+        }
+    
+        /**
+         * 递归
+         * @param root
+         * @param level
+         */
+        private void operate(TreeNode root, int level){
+            result = Math.max(result, level);
+    
+            if(root == null){
+                return;
+            }
+    
+            operate(root.left, level+1);
+            operate(root.right, level+1);
+        }
+    }
+
+  
+

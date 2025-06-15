@@ -1,0 +1,105 @@
+# java-HJ88 扑克牌大小
+
+
+    import java.util.HashMap;
+    import java.util.Scanner;
+    
+    public class Main {
+        // 3 4 5 6 7 8 9 10 J Q K A 2 joker JOKER
+        private static final HashMap<String, Integer> cardMap = new HashMap<String, Integer>(){{
+            put("3", 1);
+            put("4", 2);
+            put("5", 3);
+            put("6", 4);
+            put("7", 5);
+            put("8", 6);
+            put("9", 7);
+            put("10", 8);
+            put("J", 9);
+            put("Q", 10);
+            put("K", 11);
+            put("A", 12);
+            put("2", 13);
+            put("joker", 14);
+            put("JOKER", 15);
+        }};
+    
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution(in);
+            }
+        }
+    
+        /**
+         * 模拟法 - Map
+         * @param in
+         */
+        private static void solution(Scanner in){
+            String[] pokerCardHands = in.nextLine().split("-");
+            
+            String result = compare(pokerCardHands);
+    
+            System.out.println(result);
+        }
+    
+        /**
+         * 比较两手牌
+         * @param pokerCardHands
+         * @return
+         */
+        private static String compare(String[] pokerCardHands){
+            String[] handOneCards = pokerCardHands[0].split(" ");
+            String[] handTwoCards = pokerCardHands[1].split(" ");
+    
+            int handOneCardsLen = handOneCards.length;
+            int handTwoCardsLen = handTwoCards.length;
+    
+            // flag: 0->ERROR 1->(第一手牌>=第二手牌,输出第一手牌) -1->(第一手牌<第二手牌,输出第二手牌)
+            int flag;
+            // len: 1-个子 2-对子(包括对王) 3-三个 4-炸弹(四个) 5-顺子(连续5张)
+            // 手牌类型相同
+            if(handOneCardsLen == handTwoCardsLen){
+                if(cardMap.get(handOneCards[0]) >= cardMap.get(handTwoCards[0])){
+                    flag = 1;
+                }else{
+                    flag = -1;
+                }
+            }
+            // 手牌类型不同
+            else{
+                // 第一手牌是 对王
+                if("joker".equals(handOneCards[0])){
+                    flag = 1;
+                }
+                // 第二手牌是 对王
+                else if("joker".equals(handTwoCards[0])){
+                    flag = -1;
+                }
+                // 第一手牌是 炸弹
+                else if(handOneCardsLen == 4){
+                    flag = 1;
+                }
+                // 第二手牌是 炸弹
+                else if(handTwoCardsLen == 4){
+                    flag = -1;
+                }
+                // 无法比较
+                else{
+                    flag = 0;
+                }
+            }
+    
+            if(flag == 1){
+                return pokerCardHands[0];
+            }else if(flag == -1){
+                return pokerCardHands[1];
+            }else{
+                return "ERROR";
+            }
+        }
+    }
+
+  
+

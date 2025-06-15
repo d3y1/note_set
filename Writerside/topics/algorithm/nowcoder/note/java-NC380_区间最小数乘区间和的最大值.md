@@ -1,0 +1,70 @@
+# java-NC380 区间最小数乘区间和的最大值
+
+
+    import java.util.*;
+    
+    /**
+     * NC380 区间最小数乘区间和的最大值
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param a int整型一维数组 
+         * @return int整型
+         */
+        public int mintimessum (ArrayList<Integer> a) {
+            return solution(a);
+        }
+    
+        /**
+         * 前缀和 + 单调栈
+         * @param a
+         * @return
+         */
+        private int solution(ArrayList<Integer> a){
+            int n = a.size();
+            int[] preSum = new int[n+1];
+            // 前缀和
+            for(int i=1; i<=n; i++){
+                preSum[i] = preSum[i-1]+a.get(i-1);
+            }
+    
+            Stack<Integer> leftStack = new Stack<>();
+            // leftIdx[i]: 表示以a[i]为最小值时 区间的左边界索引
+            int[] leftIdx = new int[n];
+            for(int i=0; i<n; i++){
+                // 单调栈 单调增(从左往右) 找到左边第一个小于a[i]的索引 -1表示没找到
+                while(!leftStack.isEmpty() && a.get(leftStack.peek())>=a.get(i)){
+                    leftStack.pop();
+                }
+                leftIdx[i] = leftStack.isEmpty() ? -1 : leftStack.peek();
+                leftStack.push(i);
+            }
+    
+            Stack<Integer> rightStack = new Stack<>();
+            // rightIdx[i]: 表示以a[i]为最小值时 区间的右边界索引
+            int[] rightIdx = new int[n];
+            for(int i=n-1; i>=0; i--){
+                // 单调栈 单调增(从右往左) 找到右边第一个小于a[i]的索引 n表示没找到
+                while(!rightStack.isEmpty() && a.get(rightStack.peek())>=a.get(i)){
+                    rightStack.pop();
+                }
+                rightIdx[i] = rightStack.isEmpty() ? n : rightStack.peek();
+                rightStack.push(i);
+            }
+    
+            int sum = 0;
+            for(int i=0; i<n; i++){
+                // 区间和 * 区间最小值
+                sum = Math.max(sum, (preSum[rightIdx[i]]-preSum[leftIdx[i]+1])*a.get(i));
+            }
+    
+            return sum;
+        }
+    }
+
+  
+

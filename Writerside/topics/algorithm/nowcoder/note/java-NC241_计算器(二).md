@@ -1,0 +1,70 @@
+# java-NC241 计算器(二)
+
+
+    import java.util.*;
+    
+    /**
+     * NC241 计算器(二)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 
+         * @param s string字符串 
+         * @return int整型
+         */
+        public int calculate (String s) {
+            int len = s.length();
+            int result = 0;
+            int num = 0;
+    
+            char sign = '+';
+            Stack<Integer> stack = new Stack<Integer>();
+            for(int i=0; i<len; i++){
+                char ch = s.charAt(i);
+                if(Character.isDigit(ch)){
+                    num = num * 10 + (ch-'0');
+                }
+                
+                // i==len-1 => 最后一次运算
+                if(!Character.isDigit(ch) || i==len-1){
+                    switch(sign){
+                        case '+':
+                        {
+                            stack.push(num);
+                            break;
+                        }
+                        case '-':
+                        {
+                            stack.push(-num);
+                            break;
+                        }
+                        case '*':
+                        {
+                            stack.push(stack.pop()*num);
+                            break;
+                        }
+                        case '/':
+                        {
+                            stack.push(stack.pop()/num);
+                            break;
+                        }
+                        default: break;
+                    }
+                    sign = ch;
+                    num = 0;
+                }
+            }
+    
+            while(!stack.isEmpty()){
+                result += stack.pop();
+            }
+    
+            return result;
+        }
+    }
+
+  
+

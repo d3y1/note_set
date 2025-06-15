@@ -1,0 +1,66 @@
+# java-NC181 单词拆分(一)
+
+
+    import java.util.*;
+    
+    /**
+     * NC181 单词拆分(一)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param s string字符串
+         * @param dic string字符串一维数组
+         * @return bool布尔型
+         */
+        public boolean wordDiv (String s, String[] dic) {
+            return solution(s, dic);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[i]表示字符串s前i个字符组成的字符串s[0..i−1]是否能被拆分成若干个字典中出现的单词
+         *
+         * dp[i] = dp[j] && check(s[j..i−1])  , j<i
+         * 其中 check(s[j..i−1]) 表示子串s[j..i−1]是否出现在字典中
+         *
+         * @param s
+         * @param dic
+         * @return
+         */
+        private boolean solution(String s, String[] dic){
+            int len = s.length();
+    
+            int max = 0;
+            HashSet<String> wordSet = new HashSet<>();
+            for(String word: dic){
+                max = Math.max(max, word.length());
+                wordSet.add(word);
+            }
+    
+            boolean[] dp = new boolean[len+1];
+            dp[0] = true;
+            for(int i=1; i<=len; i++){
+                for(int j=i-1; j>=0; j--){
+                    // 剪枝
+                    if(i-j > max){
+                        break;
+                    }
+                    // dp[j] && check(s[j..i−1])
+                    if(dp[j] && wordSet.contains(s.substring(j, i))){
+                        dp[i] = true;
+                        break;
+                    }
+                }
+            }
+    
+            return dp[len];
+        }
+    }
+
+  
+

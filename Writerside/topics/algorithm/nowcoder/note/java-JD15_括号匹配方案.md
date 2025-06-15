@@ -1,0 +1,66 @@
+# java-JD15 括号匹配方案
+
+
+    import java.util.Scanner;
+    import java.util.Stack;
+    
+    /**
+     * JD15 括号匹配方案
+     * @author d3y1
+     */
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                solution2(in);
+            }
+        }
+    
+        /**
+         * 模拟法: 栈
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            char[] chars = in.nextLine().toCharArray();
+    
+            Stack<Character> stack = new Stack<>();
+            int result = 1;
+            for(char ch: chars){
+                if(ch == '('){
+                    stack.push(ch);
+                }else{
+                    result *= stack.size();
+                    stack.pop();
+                }
+            }
+    
+            System.out.println(result);
+        }
+    
+        /**
+         * 模拟法: 简化(省略栈)
+         * 
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            char[] chars = in.nextLine().toCharArray();
+    
+            int result = 1;
+            int count = 0;
+            for(char ch: chars){
+                if(ch == '('){
+                    count++;
+                }else{
+                    result *= count;
+                    count--;
+                }
+            }
+    
+            System.out.println(result);
+        }
+    }
+
+  
+

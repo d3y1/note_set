@@ -1,0 +1,75 @@
+# java-NC164 最长上升子序列(二)
+
+
+    import java.util.*;
+    
+    /**
+     * NC164 最长上升子序列(二)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 该数组最长严格上升子序列的长度
+         * @param a int整型一维数组 给定的数组
+         * @return int整型
+         */
+        public int LIS (int[] a) {
+            return solution(a);
+        }
+    
+        /**
+         * 动态规划 + 二分查找
+         *
+         * dp表示严格上升子序列
+         *
+         * @param a
+         * @return
+         */
+        private int solution(int[] a){
+            int n = a.length;
+    
+            // 严格上升子序列
+            int[] dp = new int[n+1];
+            dp[0] = Integer.MIN_VALUE;
+    
+            int index = 0;
+            int num;
+            // num 插入位置
+            int pos;
+            for(int i=1; i<=n; i++){
+                num = a[i-1];
+                if(num > dp[index]){
+                    index++;
+                    pos = index;
+                    dp[pos] = num;
+                }
+                // 二分查找
+                else{
+                    int left = 0;
+                    int right = index;
+                    int mid;
+                    while(left <= right){
+                        mid = (left+right)/2;
+                        if(num > dp[mid]){
+                            left = mid + 1;
+                        }else{
+                            right = mid - 1;
+                        }
+                    }
+    
+                    pos = left;
+                    dp[pos] = num;
+                    if(pos > index){
+                        index++;
+                    }
+                }
+            }
+    
+            return index;
+        }
+    }
+
+  
+

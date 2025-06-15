@@ -1,0 +1,110 @@
+# java-NC205 跳跃游戏(三)
+
+
+    import java.util.*;
+    
+    /**
+     * NC205 跳跃游戏(三)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组
+         * @return int整型
+         */
+        public int minJumpStep (int[] nums) {
+            return solution1(nums);
+            // return solution2(nums);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[i]表示到达位置num[i]处需跳的最少次数
+         *
+         * dp[j] = dp[i]+1  , i+1<=j<=i+nums[i] && dp[j]=-1
+         *
+         * @param nums
+         * @return
+         */
+        private int solution1(int[] nums){
+            int n = nums.length;
+            if(n == 0){
+                return -1;
+            }
+            if(n == 1){
+                return 0;
+            }
+    
+            int[] dp = new int[n];
+            Arrays.fill(dp, -1);
+            dp[0] = 0;
+    
+            for(int i=0; i<n; i++){
+                // 当前位置不可达
+                if(dp[i] == -1){
+                    break;
+                }
+                // 最后位置可到达
+                if(i+nums[i] >= n-1){
+                    dp[n-1] = dp[i]+1;
+                    break;
+                }else{
+                    for(int j=i+1; j<=i+nums[i]; j++){
+                        // 位置首次可达 次数必然最小
+                        if(dp[j] == -1){
+                            dp[j] = dp[i]+1;
+                        }
+                    }
+                }
+            }
+    
+            return dp[n-1];
+        }
+    
+        /**
+         * 贪心
+         * @param nums
+         * @return
+         */
+        private int solution2(int[] nums){
+            int n = nums.length;
+            if(n == 0){
+                return -1;
+            }
+            if(n == 1){
+                return 0;
+            }
+    
+            // 上一跳可达最大位置
+            int end = 0;
+            // 再一跳可达最大位置
+            int pos = 0;
+            // 已跳次数
+            int step = 0;
+            for(int i=0; i<n-1; i++){
+                // 当前位置不可达
+                if(i > pos){
+                    return -1;
+                }
+                pos = Math.max(pos, i+nums[i]);
+                // 已达最大位置 需跳一次
+                if(i == end){
+                    end = pos;
+                    step++;
+                }
+            }
+    
+            if(pos < n-1){
+                return -1;
+            }
+    
+            return step;
+        }
+    }
+
+  
+

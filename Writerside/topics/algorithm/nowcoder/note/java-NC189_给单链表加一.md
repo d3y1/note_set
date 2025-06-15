@@ -1,0 +1,146 @@
+# java-NC189 给单链表加一
+
+
+    import java.util.*;
+    
+    /*
+     * public class ListNode {
+     *   int val;
+     *   ListNode next = null;
+     *   public ListNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC189 给单链表加一
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param head ListNode类 
+         * @return ListNode类
+         */
+        public ListNode plusOne (ListNode head) {
+            // return solution1(head);
+            // return solution2(head);
+            return solution22(head);
+        }
+    
+        /**
+         * 迭代
+         * @param head
+         * @return
+         */
+        private ListNode solution1(ListNode head){
+            ListNode dummyHead = new ListNode(-1);
+            dummyHead.next = head;
+            ListNode curr,next;
+            curr = head.next;
+            head.next = null;
+            // 反转
+            while(curr != null){
+                next = curr.next;
+                curr.next = dummyHead.next;
+                dummyHead.next = curr;
+                curr = next;
+            }
+    
+            curr = dummyHead.next;
+            dummyHead.next = null;
+            int carry = 0;
+            int sum;
+            int adder = 1;
+            ListNode node;
+            // 加一
+            while(curr!=null || carry>0){
+                if(curr != null){
+                    sum = curr.val+adder+carry;
+                    curr = curr.next;
+                }else{
+                    sum = adder+carry;
+                }
+                adder = 0;
+                carry = sum/10;
+                node = new ListNode(sum%10);
+                node.next = dummyHead.next;
+                dummyHead.next = node;
+            }
+    
+            return dummyHead.next;
+        }
+        
+        ///////////////////////////////////////////////////////////////////////////////////////
+    
+        private int sum;
+        private int carry = 0;
+    
+        /**
+         * 递归
+         * @param head
+         * @return
+         */
+        private ListNode solution2(ListNode head){
+            plus(head);
+    
+            ListNode node;
+            // 最终进位
+            if(carry > 0){
+                node = new ListNode(carry);
+                node.next = head;
+                return node;
+            }else{
+                return head;
+            }
+        }
+    
+        /**
+         * 加: 递归
+         * @param head
+         */
+        private void plus(ListNode head){
+            // 终止条件
+            if(head.next == null){
+                sum = head.val+1+carry;
+                carry = sum/10;
+                head.val = sum%10;
+                return;
+            }
+    
+            plus(head.next);
+    
+            sum = head.val+carry;
+            carry = sum/10;
+            head.val = sum%10;
+        }
+    
+        /**
+         * 递归
+         * 
+         * 简化
+         * 事先添加虚拟头结点
+         * 
+         * @param head
+         * @return
+         */
+        private ListNode solution22(ListNode head){
+            ListNode dummyHead = new ListNode(0);
+            dummyHead.next = head;
+    
+            plus(dummyHead);
+    
+            // 最终进位
+            if(dummyHead.val > 0){
+                return dummyHead;
+            }else{
+                return head;
+            }
+        }
+    }
+
+  
+

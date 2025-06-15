@@ -1,0 +1,143 @@
+# java-MT46 外卖满减
+
+
+    import java.util.Arrays;
+    import java.util.Scanner;
+    
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                solution2(in);
+                solution3(in);
+                solution4(in);
+            }
+        }
+    
+        /**
+         * 动态规划: 01背包(一维)
+         * dp[j]表示不超过j元的最高消费
+         * 达到x元(>=x)选择价格总和最低的菜品组合 -> 不超过sum-x(<=sum-x)选择价格总和最高的菜品组合
+         * @param in
+         */
+        private static void solution4(Scanner in){
+            int n = in.nextInt();
+            int x = in.nextInt();
+    
+            int[] prices = new int[n+1];
+            int sum = 0;
+            for(int i=1; i<=n; i++){
+                prices[i] = in.nextInt();
+                sum += prices[i];
+            }
+    
+            int v = sum-x;
+            int[] dp = new int[v+1];
+            for(int i=1; i<=n; i++){
+                for(int j=v; j>=prices[i]; j--){
+                    dp[j] = Math.max(dp[j], dp[j-prices[i]]+prices[i]);
+                }
+            }
+    
+            System.out.println(sum-dp[v]);
+        }
+    
+        /**
+         * 动态规划: 01背包(二维)
+         * dp[i][j]表示有i种菜品时不超过j元的最高消费
+         * 达到x元(>=x)选择价格总和最低的菜品组合 -> 不超过sum-x(<=sum-x)选择价格总和最高的菜品组合
+         * @param in
+         */
+        private static void solution3(Scanner in){
+            int n = in.nextInt();
+            int x = in.nextInt();
+    
+            int[] prices = new int[n+1];
+            int sum = 0;
+            for(int i=1; i<=n; i++){
+                prices[i] = in.nextInt();
+                sum += prices[i];
+            }
+    
+            int v = sum-x;
+            int[][] dp = new int[n+1][v+1];
+            for(int i=1; i<=n; i++){
+                // for(int j=0; j<=v; j++){
+                for(int j=v; j>=0; j--){
+                    dp[i][j] = dp[i-1][j];
+                    if(j >= prices[i]){
+                        dp[i][j] = Math.max(dp[i][j], dp[i-1][j-prices[i]]+prices[i]);
+                    }
+    
+                }
+            }
+    
+            System.out.println(sum-dp[n][v]);
+        }
+    
+        /**
+         * 动态规划: 01背包(一维)[背包变体]
+         * dp[j]表示达到j元的最低消费
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            int n = in.nextInt();
+            int x = in.nextInt();
+    
+            int[] prices = new int[n+1];
+            for(int i=1; i<=n; i++){
+                prices[i] = in.nextInt();
+            }
+    
+            int[] dp = new int[x+1];
+            Arrays.fill(dp, 10001);
+            for(int i=1; i<=n; i++){
+                for(int j=x; j>=0; j--){
+                    if(j > prices[i]){
+                        dp[j] = Math.min(dp[j], dp[j-prices[i]]+prices[i]);
+                    }else{
+                        dp[j] = Math.min(dp[j], prices[i]);
+                    }
+                }
+            }
+    
+            System.out.println(dp[x]);
+        }
+    
+        /**
+         * 动态规划: 01背包(二维)[背包变体]
+         * dp[i][j]表示有i种菜品时达到j元的最低消费
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            int n = in.nextInt();
+            int x = in.nextInt();
+    
+            int[] prices = new int[n+1];
+            for(int i=1; i<=n; i++){
+                prices[i] = in.nextInt();
+            }
+    
+            int[][] dp = new int[n+1][x+1];
+            for(int i=0; i<=n; i++){
+                Arrays.fill(dp[i], 10001);
+            }
+            for(int i=1; i<=n; i++){
+                // for(int j=0; j<=x; j++){
+                for(int j=x; j>=0; j--){
+                    if(j > prices[i]){
+                        dp[i][j] = Math.min(dp[i-1][j], dp[i-1][j-prices[i]]+prices[i]);
+                    }else{
+                        dp[i][j] = Math.min(dp[i-1][j], prices[i]);
+                    }
+                }
+            }
+    
+            System.out.println(dp[n][x]);
+        }
+    }
+
+  
+

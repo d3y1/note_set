@@ -1,0 +1,110 @@
+# java-NC214 分割等和子集
+
+
+    import java.util.*;
+    
+    /**
+     * NC214 分割等和子集
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组
+         * @return bool布尔型
+         */
+        public boolean partition (int[] nums) {
+            return solution1(nums);
+            // return solution2(nums);
+        }
+    
+        /**
+         * 动态规划: 01背包
+         *
+         * dp[i]表示背包大小为i时所能凑成的最大整数和
+         * 
+         * dp[j] = Math.max(dp[j], dp[j-nums[i]]+nums[i])  , nums[i]<=j<=v
+         *
+         * @param nums
+         * @return
+         */
+        private boolean solution1(int[] nums){
+            int n = nums.length;
+    
+            int sum = 0;
+            for(int i=0; i<n; i++){
+                sum += nums[i];
+            }
+            // 所有整数和为奇数
+            if(sum%2 == 1){
+                return false;
+            }
+    
+            int v = sum/2;
+            int[] dp = new int[v+1];
+            for(int i=0; i<n; i++){
+                // 某个整数大于一半
+                if(nums[i] > v){
+                    return false;
+                }
+                // 某个整数等于一半
+                if(nums[i] == v){
+                    return true;
+                }
+                for(int j=v; j>=nums[i]; j--){
+                    dp[j] = Math.max(dp[j], dp[j-nums[i]]+nums[i]);
+                }
+            }
+    
+            // 是否能恰好装满
+            return dp[v]==v;
+        }
+    
+        /**
+         * 动态规划
+         * 
+         * dp[i]表示背包大小为i时是否能恰好装满
+         * 
+         * dp[j] = dp[j] | dp[j-nums[i]]  , nums[i]<=j<=v
+         * 
+         * @param nums
+         * @return
+         */
+        private boolean solution2(int[] nums){
+            int n = nums.length;
+    
+            int sum = 0;
+            for(int i=0; i<n; i++){
+                sum += nums[i];
+            }
+            // 所有整数和为奇数
+            if(sum%2 == 1){
+                return false;
+            }
+    
+            int v = sum/2;
+            boolean[] dp = new boolean[v+1];
+            dp[0] = true;
+            for(int i=0; i<n; i++){
+                // 某个整数大于一半
+                if(nums[i] > v){
+                    return false;
+                }
+                // 某个整数等于一半
+                if(nums[i] == v){
+                    return true;
+                }
+                for(int j=v; j>=nums[i]; j--){
+                    dp[j] = dp[j] | dp[j-nums[i]];
+                }
+            }
+    
+            // 是否能恰好装满
+            return dp[v];
+        }
+    }
+
+  
+

@@ -1,0 +1,154 @@
+# java-NC272 栈的压入、弹出序列
+
+
+    import java.util.*;
+    
+    /**
+     * NC272 栈的压入、弹出序列
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param pushV int整型一维数组 
+         * @param popV int整型一维数组 
+         * @return bool布尔型
+         */
+        public boolean IsPopOrder (int[] pushV, int[] popV) {
+            // return solution1(pushV, popV);
+            // return solution11(pushV, popV);
+            return solution2(pushV, popV);
+            // return solution22(pushV, popV);
+        }
+    
+        /**
+         * 栈
+         * @param pushV
+         * @param popV
+         * @return
+         */
+        private boolean solution1(int[] pushV, int[] popV){
+            int n = popV.length;
+            if(n == 0){
+                return true;
+            }
+    
+            Stack<Integer> stack = new Stack<>();
+            int target;
+    
+            // pushV index
+            int j = 0;
+            // popV index
+            for(int i=0; i<n; i++){
+                // 依次查找pop目标
+                target = popV[i];
+                if(stack.isEmpty()){
+                    // 当前栈为空 且 没有剩余待压入栈整数
+                    if(j == n){
+                        return false;
+                    }
+                    // 当前栈为空 将下一个剩余整数压入栈
+                    stack.push(pushV[j++]);
+                }
+                // 栈顶不是目标整数
+                while(stack.peek()!=target && j<n){
+                    // 目标整数在栈中
+                    if(stack.contains(target)){
+                        return false;
+                    }
+                    stack.push(pushV[j++]);
+                }
+                if(stack.peek() == target){
+                    stack.pop();
+                }else{
+                    return false;
+                }
+            }
+    
+            return true;
+        }
+    
+        /**
+         * 栈: 简化
+         * @param pushV
+         * @param popV
+         * @return
+         */
+        private boolean solution11(int[] pushV, int[] popV){
+            int n = popV.length;
+            if(n == 0){
+                return true;
+            }
+    
+            Stack<Integer> stack = new Stack<>();
+            int target;
+    
+            // pushV index
+            int j = 0;
+            // popV index
+            for(int i=0; i<n; i++){
+                // 依次查找pop目标
+                target = popV[i];
+                // 栈为空 或 栈顶不是目标整数
+                while((stack.isEmpty()||stack.peek()!=target) && j<n){
+                    // 目标整数在栈中
+                    if(stack.contains(target)){
+                        return false;
+                    }
+                    stack.push(pushV[j++]);
+                }
+                if(stack.peek() == target){
+                    stack.pop();
+                }else{
+                    return false;
+                }
+            }
+    
+            return true;
+        }
+    
+        /**
+         * 栈: 优化
+         * @param pushV
+         * @param popV
+         * @return
+         */
+        private boolean solution2(int[] pushV, int[] popV){
+            Stack<Integer> stack = new Stack<>();
+            int i = 0;
+            for(int num: pushV){
+                stack.push(num);
+                while(!stack.isEmpty() && stack.peek()==popV[i]){
+                    stack.pop();
+                    i++;
+                }
+            }
+    
+            return stack.isEmpty();
+        }
+    
+        /**
+         * 模拟栈: 数组
+         * @param pushV
+         * @param popV
+         * @return
+         */
+        private boolean solution22(int[] pushV, int[] popV){
+            int j = 0;
+            int i = 0;
+            for(int num: pushV){
+                pushV[j++] = num;
+                while(j>0 && pushV[j-1]==popV[i]){
+                    j--;
+                    i++;
+                }
+            }
+    
+            return j==0;
+        }
+    }
+
+  
+

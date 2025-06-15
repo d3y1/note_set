@@ -1,0 +1,198 @@
+# java-NC247 最接近的三数之和
+
+
+    import java.util.*;
+    
+    /**
+     * NC247 最接近的三数之和
+     * @author d3y1
+     */
+    public class Solution {
+        private int sum;
+        private int abs;
+        private int diff = Integer.MAX_VALUE;
+        private int result;
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组
+         * @param target int整型
+         * @return int整型
+         */
+        public int ClosestSum (int[] nums, int target) {
+            // return solution1(nums, target);
+            return solution2(nums, target);
+            // return solution3(nums, target);
+            // return solution4(nums, target);
+        }
+    
+        /**
+         * 排序+三指针
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution1(int[] nums, int target){
+            int n = nums.length;
+    
+            // 排序
+            Arrays.sort(nums);
+    
+            // 三指针
+            for(int i=0; i<=n-3; i++){
+                for(int j=i+1; j<=n-2; j++){
+                    for(int k=j+1; k<=n-1; k++){
+                        check(nums, target, i, j, k);
+                        if(sum == target){
+                            return sum;
+                        }else if(sum > target){
+                            break;
+                        }
+                    }
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 排序+三指针: 优化
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution2(int[] nums, int target){
+            int n = nums.length;
+    
+            // 排序
+            Arrays.sort(nums);
+    
+            // 三指针
+            int j,k;
+            for(int i=0; i<=n-3; i++){
+                j = i+1;
+                k = n-1;
+                while(j < k){
+                    check(nums, target, i, j, k);
+                    if(sum < target){
+                        j++;
+                    }
+                    else if(sum > target){
+                        k--;
+                    }else{
+                        return sum;
+                    }
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 排序+双指针+二分
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution3(int[] nums, int target){
+            int n = nums.length;
+    
+            // 排序
+            Arrays.sort(nums);
+    
+            // 双指针+二分
+            for(int i=0; i<=n-3; i++){
+                for(int j=i+1; j<=n-2; j++){
+                    int left = j+1;
+                    int right = n-1;
+                    int mid;
+                    while(left <= right){
+                        mid = left+((right-left)>>1);
+                        sum = nums[i]+nums[j]+nums[mid];
+    
+                        if(sum < target){
+                            left = mid+1;
+                        }else if(sum > target){
+                            right = mid-1;
+                        }else{
+                            return sum;
+                        }
+                    }
+                    // 左边界
+                    if(left == j+1){
+                        check(nums, target, i, j, j+1);
+                    }
+                    // 右边界
+                    else if(left == n){
+                        check(nums, target, i, j, n-1);
+                    }
+                    // 中间
+                    else{
+                        check(nums, target, i, j, left-1);
+                        check(nums, target, i, j, left);
+                    }
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 递归: 遍历解空间
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution4(int[] nums, int target){
+            adder(nums, target, 0, 0, 0);
+            return result;
+        }
+    
+        /**
+         * 递归: 加法器
+         * @param nums
+         * @param target
+         * @param index
+         * @param cnt
+         * @param sum
+         */
+        private void adder(int[] nums, int target, int index, int cnt, int sum){
+            if(index >= nums.length){
+                return;
+            }
+            if(cnt == 3){
+                abs = Math.abs(sum-target);
+                if(abs < diff){
+                    result = sum;
+                    diff = abs;
+                }
+                return;
+            }
+    
+            for(int i=index; i<nums.length; i++){
+                adder(nums, target, i+1, cnt+1, sum+nums[i]);
+            }
+        }
+    
+        /**
+         * 差值校验
+         * @param nums
+         * @param target
+         * @param i
+         * @param j
+         * @param k
+         */
+        private void check(int[] nums, int target, int i, int j, int k){
+            sum = nums[i]+nums[j]+nums[k];
+            abs = Math.abs(sum-target);
+            if(abs < diff){
+                result = sum;
+                diff = abs;
+            }
+        }
+    }
+
+  
+

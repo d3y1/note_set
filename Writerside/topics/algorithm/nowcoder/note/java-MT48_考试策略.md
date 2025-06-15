@@ -1,0 +1,92 @@
+# java-MT48 考试策略
+
+
+    import java.util.Scanner;
+    
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                solution2(in);
+            }
+        }
+    
+        /**
+         * 动态规划: 01背包(一维)[分组背包]
+         * dp[j]表示花费不超过j分钟的最多得分
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            int n = in.nextInt();
+            int[] times = new int[2*n+1];
+            int[] scores = new int[2*n+1];
+    
+            for(int i=1; i<=2*n; i++){
+                times[i] = in.nextInt();
+                scores[i] = in.nextInt();
+            }
+    
+            int v = 120;
+            int[] dp = new int[v+1];
+            for(int i=1; i<=n; i++){
+                for(int j=v; j>=0; j--){
+                    // 只做部分
+                    if(j >= times[2*i-1]){
+                        dp[j] = Math.max(dp[j], dp[j-times[2*i-1]]+scores[2*i-1]);
+                    }
+    
+                    // 做完全部
+                    if(j >= times[2*i]){
+                        dp[j] = Math.max(dp[j], dp[j-times[2*i]]+scores[2*i]);
+                    }
+    
+                }
+            }
+    
+            System.out.println(dp[v]);
+        }
+    
+        /**
+         * 动态规划: 01背包(二维)[分组背包]
+         * dp[i][j]表示有i种题目时花费不超过j分钟的最多得分
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            int n = in.nextInt();
+            int[] times = new int[2*n+1];
+            int[] scores = new int[2*n+1];
+    
+            for(int i=1; i<=2*n; i++){
+                times[i] = in.nextInt();
+                scores[i] = in.nextInt();
+            }
+    
+            int v = 120;
+            int[][] dp = new int[n+1][v+1];
+            for(int i=1; i<=n; i++){
+                // for(int j=0; j<=v; j++){
+                for(int j=v; j>=0; j--){
+                    // 直接跳过
+                    dp[i][j] = dp[i-1][j];
+    
+                    // 只做部分
+                    if(j >= times[2*i-1]){
+                        dp[i][j] = Math.max(dp[i][j], dp[i-1][j-times[2*i-1]]+scores[2*i-1]);
+                    }
+    
+                    // 做完全部
+                    if(j >= times[2*i]){
+                        dp[i][j] = Math.max(dp[i][j], dp[i-1][j-times[2*i]]+scores[2*i]);
+                    }
+    
+                }
+            }
+    
+            System.out.println(dp[n][v]);
+        }
+    }
+
+  
+

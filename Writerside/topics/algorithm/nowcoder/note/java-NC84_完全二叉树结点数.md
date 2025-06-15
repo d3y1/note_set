@@ -1,0 +1,121 @@
+# java-NC84 完全二叉树结点数
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC84 完全二叉树结点数
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param head TreeNode类 
+         * @return int整型
+         */
+        public int nodeNum (TreeNode head) {
+            // return solution1(head);
+            // return solution2(head);
+            return solution3(head);
+        }
+    
+        /**
+         * 前序遍历
+         * @param head
+         * @return
+         */
+        private int solution1(TreeNode head){
+            return preOrder1(head);
+        }
+    
+        private int preOrder1(TreeNode head){
+            if(head == null){
+                return 0;
+            }
+    
+            return 1+preOrder1(head.left)+preOrder1(head.right);
+        }
+    
+        /**
+         * 前序遍历: 优化
+         * @param head
+         * @return
+         */
+        private int solution2(TreeNode head){
+            return preOrder2(head);
+        }
+    
+        private int preOrder2(TreeNode head){
+            if(head == null){
+                return 0;
+            }
+    
+            int leftHeight=0;
+            int rightHeight=0;
+            // 当前树 最左节点高度
+            for(TreeNode node=head; node!=null; node=node.left){
+                leftHeight++;
+            }
+            // 当前树 最右节点高度
+            for(TreeNode node=head; node!=null; node=node.right){
+                rightHeight++;
+            }
+            // 当前树 满二叉树
+            if(leftHeight == rightHeight){
+                return (int)Math.pow(2.0, rightHeight)-1;
+                // return (1<<rightHeight)-1;
+            }
+    
+            return 1+preOrder2(head.left)+preOrder2(head.right);
+        }
+    
+        /**
+         * 前序遍历: 优化
+         * @param head
+         * @return
+         */
+        private int solution3(TreeNode head){
+            return preOrder3(head);
+        }
+    
+        private int preOrder3(TreeNode head){
+            if(head == null){
+                return 0;
+            }
+    
+            int leftHeight=0;
+            int rightHeight=0;
+            // 左子树高度
+            for(TreeNode node=head.left; node!=null; node=node.left){
+                leftHeight++;
+            }
+            // 右子树高度
+            for(TreeNode node=head.right; node!=null; node=node.left){
+                rightHeight++;
+            }
+            // 左子树 满二叉树
+            if(leftHeight == rightHeight){
+                return 1+((1<<leftHeight)-1)+preOrder3(head.right);
+            }
+            // 右子树 满二叉树
+            else{
+                return 1+preOrder3(head.left)+((1<<rightHeight)-1);
+            }
+        }
+    }
+
+  
+

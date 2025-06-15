@@ -1,0 +1,117 @@
+# java-ZJ15 任务调度
+
+
+    import java.io.BufferedReader;
+    import java.io.IOException;
+    import java.io.InputStreamReader;
+    import java.util.*;
+    
+    public class Main {
+        public static void main(String[] args) throws IOException{
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            solution(reader);
+        }
+    
+        /**
+         * 模拟法
+         * 生产者消费者模型
+         * 
+         * @param reader
+         * @throws IOException
+         */
+        private static void solution(BufferedReader reader) throws IOException{
+            String[] line = reader.readLine().split(" ");
+            // PM序号
+            int pmSeq = Integer.parseInt(line[0]);
+            // 程序员个数
+            int programmerNum = Integer.parseInt(line[1]);
+            // idea个数
+            int ideaNum = Integer.parseInt(line[2]);
+    
+            // 该程序员还需多长时间完成任务
+            int[] programmers = new int[programmerNum];
+            HashMap<Integer, Idea> map = new HashMap<>();
+    
+            // 生产任务
+            PriorityQueue<Idea> produceQ = new PriorityQueue<>(Comparator.comparingInt(o -> o.submit));
+            // 待完成任务
+            PriorityQueue<Idea> taskQ = new PriorityQueue<>((o1, o2) -> {
+                if(o1.priority != o2.priority){
+                    return o1.priority-o2.priority;
+                }else{
+                    if(o1.duration != o2.duration){
+                        return o1.duration-o2.duration;
+                    }else{
+                        return o1.submit-o2.submit;
+                    }
+                }
+            });
+    
+            // 任务生产
+            int[] ideaLine;
+            for(int i=0; i<ideaNum; i++){
+                ideaLine = Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+                Idea idea = new Idea(i, ideaLine[1], ideaLine[2], ideaLine[3]);
+                map.put(i, idea);
+                produceQ.add(idea);
+            }
+    
+            // 当前时间
+            int curr = 0;
+            while ((!taskQ.isEmpty()) || (!produceQ.isEmpty())) {
+                // 任务在当前时间点 提交
+                while ((!produceQ.isEmpty()) && produceQ.peek().submit == curr) {
+                    taskQ.offer(produceQ.poll());
+                }
+    
+                // 程序员 工作或选任务
+                for(int i=0; i<programmerNum; i++){
+                    // 该程序员处于 工作状态
+                    if(programmers[i] > 0){
+                        // 工作1秒 任务所需时间减1秒
+                        programmers[i]--;
+                    }
+                    // 该程序员处于 空闲状态
+                    else{
+                        // 任务队列有任务
+                        if(!taskQ.isEmpty()){
+                            Idea idea = taskQ.poll();
+                            // 计算完成的时间点
+                            idea.complete = curr + idea.duration;
+                            // 该程序员完成该任务所需的时间 减去当前这1秒
+                            programmers[i] = idea.duration - 1;
+                        }
+                    }
+                }
+                curr++;
+            }
+    
+            for(int i=0; i<ideaNum; i++){
+                System.out.println(map.get(i).complete);
+            }
+        }
+    
+        private static class Idea {
+            // 不是pm的编号
+            int id;
+            // 提交时间
+            int submit;
+            // 优先级
+            int priority;
+            // 所需时间
+            int duration;
+            // 完成时间
+            int complete;
+    
+            public Idea(int id, int submit, int priority, int duration){
+                this.id = id;
+                this.submit = submit;
+                this.priority = priority;
+                this.duration = duration;
+                this.complete = -1;
+            }
+        }
+    }
+
+  
+

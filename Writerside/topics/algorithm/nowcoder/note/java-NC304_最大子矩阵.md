@@ -1,0 +1,128 @@
+# java-NC304 最大子矩阵
+
+
+    import java.util.*;
+    
+    /**
+     * NC304 最大子矩阵
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param matrix int整型ArrayList<ArrayList<>>
+         * @return int整型
+         */
+        public int getMaxMatrix (ArrayList<ArrayList<Integer>> matrix) {
+            return solution1(matrix);
+            // return solution2(matrix);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * 相似 -> NC302 环形数组的连续子数组最大和
+         *
+         * dp[k] 表示矩阵从第i行到第j行且以第k列为底(最右列)的子矩阵的最大和
+         * sum[k]表示矩阵从第i行到第j行中第k列的元素和
+         *
+         *         { dp[k-1] + sum[k]  , dp[k-1] > 0  && 1<=i<=n && i<=j<=n && 1<=k<=n
+         * dp[k] = {
+         *         { sum[k]            , dp[k-1] <= 0 && 1<=i<=n && i<=j<=n && 1<=k<=n
+         *
+         *            k=2
+         *            |
+         *         0 -2 -7  0
+         * i=2 ->  9  2 -6  2
+         *        -4  1 -4  1
+         * j=4 -> -1  8  0 -2
+         * sum[k]  4 11 -10 1
+         * dp[k]   4 15  5  6
+         *
+         * => result = Math.max(result, dp[k]) = dp[2] = 15
+         *
+         * @param matrix
+         * @return
+         */
+        private int solution1(ArrayList<ArrayList<Integer>> matrix){
+            int n = matrix.size();
+    
+            int[] sum,dp;
+            int result = Integer.MIN_VALUE;
+            for(int i=1; i<=n; i++){
+                sum = new int[n+1];
+                dp = new int[n+1];
+                for(int j=i; j<=n; j++){
+                    for(int k=1; k<=n; k++){
+                        sum[k] += matrix.get(j-1).get(k-1);
+                        if(dp[k-1] > 0){
+                            dp[k] = dp[k-1] + sum[k];
+                        }else{
+                            dp[k] = sum[k];
+                        }
+                        result = Math.max(result, dp[k]);
+                    }
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 动态规划
+         * 
+         * dp[i][j]表示从矩阵左上角(1,1)到以位置(i,j)(第i行第j列)为右下角的子矩阵的和
+         * 
+         *            { matrix.get(i-1).get(j-1)                                           , i==1 && j==1
+         * dp[i][j] = { dp[i][j-1] + matrix.get(i-1).get(j-1)                              , i==1 && j>1
+         *            { dp[i-1][j] + matrix.get(i-1).get(j-1)                              , i>1 && j==1
+         *            { dp[i][j-1] + dp[i-1][j] - dp[i-1][j-1] + matrix.get(i-1).get(j-1)  , i>1 && j>1
+         * 
+         * 
+         * sum表示矩阵中以位置(i,j)(第i行第j列)为左上角且以位置(k,m)(第k行第m列)为右下角的子矩阵的和
+         * 
+         * sum = dp[k][m] - dp[k][j-1] - dp[i-1][m] + dp[i-1][j-1]  , 1<=i<=n && 1<=j<=n && i<=k<=n && j<=m<=n
+         * 
+         * @param matrix
+         * @return
+         */
+        private int solution2(ArrayList<ArrayList<Integer>> matrix){
+            int n = matrix.size();
+    
+            int[][] dp = new int[n+1][n+1];
+    
+            for(int i=1; i<=n; i++){
+                for(int j=1; j<=n; j++){
+                    if(i==1 && j==1){
+                        dp[i][j] = matrix.get(i-1).get(j-1);
+                    }else if(i==1 && j>1){
+                        dp[i][j] = dp[i][j-1] + matrix.get(i-1).get(j-1);
+                    }else if(i>1 && j==1){
+                        dp[i][j] = dp[i-1][j] + matrix.get(i-1).get(j-1);
+                    }else{
+                        dp[i][j] = dp[i][j-1] + dp[i-1][j] - dp[i-1][j-1] + matrix.get(i-1).get(j-1);
+                    }
+                }
+            }
+    
+            int result = Integer.MIN_VALUE;
+            int sum;
+            for(int i=1; i<=n; i++){
+                for(int j=1; j<=n; j++){
+                    for(int k=i; k<=n; k++){
+                        for(int m=j; m<=n; m++){
+                            sum = dp[k][m] - dp[k][j-1] - dp[i-1][m] + dp[i-1][j-1];
+                            result = Math.max(result, sum);
+                        }
+                    }
+                }
+            }
+    
+            return result;
+        }
+    }
+
+  
+

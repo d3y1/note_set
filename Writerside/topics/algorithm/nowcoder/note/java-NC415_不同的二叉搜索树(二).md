@@ -1,0 +1,73 @@
+# java-NC415 不同的二叉搜索树(二)
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC415 不同的二叉搜索树(二)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param n int整型
+         * @return TreeNode类ArrayList
+         */
+        public ArrayList<TreeNode> BSTgenerate (int n) {
+            return dp(1, n);
+        }
+    
+        /**
+         * 动态规划 + 递归
+         *
+         * dp(m,n)表示区间[m,n]节点构成互不相同二叉搜索树的种数
+         * 
+         * dp(m,n) = dp(m,m-1)*dp(m+1,n) + dp(m,m)*dp(m+2,n) + ... + dp(m,n-1)*dp(n+1,n)
+         *
+         * @param m
+         * @param n
+         * @return
+         */
+        private ArrayList<TreeNode> dp(int m, int n){
+            ArrayList<TreeNode> list = new ArrayList<TreeNode>();
+    
+            if(m > n){
+                // 必须
+                list.add(null);
+                return list;
+            }
+    
+            for(int i=m; i<=n; i++){
+                ArrayList<TreeNode> leftRoots = dp(m, i-1);
+                ArrayList<TreeNode> rightRoots = dp(i+1, n);
+    
+                for(TreeNode lRoot: leftRoots){
+                    for(TreeNode rRoot: rightRoots){
+                        TreeNode root = new TreeNode(i);
+                        root.left = lRoot;
+                        root.right = rRoot;
+    
+                        list.add(root);
+                    }
+                }
+            }
+    
+            return list;
+        }
+    }
+
+  
+

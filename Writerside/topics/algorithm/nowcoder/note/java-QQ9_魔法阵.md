@@ -1,0 +1,144 @@
+# java-QQ9 魔法阵
+
+
+    import java.util.Arrays;
+    import java.util.Scanner;
+    
+    /**
+     * QQ9 魔法阵
+     * @author d3y1
+     */
+    public class Main {
+        private static final int N = 4;
+    
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                solution2(in);
+            }
+        }
+    
+        /**
+         * 数学法: 向量
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            int n = Integer.parseInt(in.nextLine());
+    
+            while(n-- > 0){
+                String xStr = in.nextLine();
+                String yStr = in.nextLine();
+    
+                int[] x = new int[N+1];
+                int[] y = new int[N+1];
+    
+                for(int i=1; i<=N; i++){
+                    x[i] = Integer.parseInt(String.valueOf(xStr.charAt(i-1)));
+                    y[i] = Integer.parseInt(String.valueOf(yStr.charAt(i-1)));
+                }
+    
+                // 1-A 2-B 3-C 4-D
+                int[] vectorAD = new int[]{x[4]-x[1], y[4]-y[1]};
+                int[] vectorBC = new int[]{x[3]-x[2], y[3]-y[2]};
+    
+                String result;
+                if(isSquare(vectorAD, vectorBC)){
+                    result = "Yes";
+                }else{
+                    result = "No";
+                }
+    
+                System.out.println(result);
+            }
+        }
+    
+        /**
+         * 是否正方形: 两条对角线向量的模相等且数量积为0
+         * @param vectorAD
+         * @param vectorBC
+         * @return
+         */
+        private static boolean isSquare(int[] vectorAD, int[] vectorBC){
+            // 向量模
+            double lenAD = Math.pow(vectorAD[0],2)+Math.pow(vectorAD[1],2);
+            double lenBC = Math.pow(vectorBC[0],2)+Math.pow(vectorBC[1],2);
+            // 向量数量积(对角线)
+            int dotProduct = vectorAD[0]*vectorBC[0]+vectorAD[1]*vectorBC[1];
+    
+            // 对角线向量 模相等且垂直(数量积为0)
+            if(lenAD==lenBC && dotProduct==0){
+                return true;
+            }
+    
+            return false;
+        }
+    
+        
+        /**
+         * 数学法
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            int n = Integer.parseInt(in.nextLine());
+    
+            while(n-- > 0){
+                char[] xChars = in.nextLine().toCharArray();
+                char[] yChars = in.nextLine().toCharArray();
+    
+                int[] x = new int[N+1];
+                int[] y = new int[N+1];
+    
+                for(int i=1; i<=N; i++){
+                    x[i] = xChars[i-1]-'0';
+                    y[i] = yChars[i-1]-'0';
+                }
+                
+                // 1-A 2-B 3-C 4-D
+                double[] edges = new double[N+2];
+                double edgeAB = Math.pow(x[2]-x[1],2)+Math.pow(y[2]-y[1],2);
+                double edgeAC = Math.pow(x[3]-x[1],2)+Math.pow(y[3]-y[1],2);
+                double edgeAD = Math.pow(x[4]-x[1],2)+Math.pow(y[4]-y[1],2);
+                double edgeBC = Math.pow(x[3]-x[2],2)+Math.pow(y[3]-y[2],2);
+                double edgeBD = Math.pow(x[4]-x[2],2)+Math.pow(y[4]-y[2],2);
+                double edgeCD = Math.pow(x[4]-x[3],2)+Math.pow(y[4]-y[3],2);
+                edges[0] = edgeAB;
+                edges[1] = edgeAC;
+                edges[2] = edgeAD;
+                edges[3] = edgeBC;
+                edges[4] = edgeBD;
+                edges[5] = edgeCD;
+    
+                Arrays.sort(edges);
+                
+                String result;
+                if(checkSquare(edges)){
+                    result = "Yes";
+                }else{
+                    result = "No";
+                }
+    
+                System.out.println(result);
+            }
+        }
+    
+        /**
+         * 是否正方形: 四条边相等 且 两条对角线相等 且 两边与对角线为直角三角形
+         * @param edges
+         * @return
+         */
+        private static boolean checkSquare(double[] edges){
+            // 四条边相等 edges[0]==edges[3]
+            // 两条对角线相等 edges[4]==edges[5]
+            // 两边与对角线为直角三角形 edges[0]+edges[0]==edges[5]
+            if(edges[0]==edges[3] && edges[4]==edges[5] && edges[0]+edges[0]==edges[5]){
+                return true;
+            }
+    
+            return false;
+        }
+    }
+
+  
+

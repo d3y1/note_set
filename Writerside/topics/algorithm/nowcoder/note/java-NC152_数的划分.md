@@ -1,0 +1,67 @@
+# java-NC152 数的划分
+
+
+    import java.util.*;
+    
+    /**
+     * NC152 数的划分
+     * @author d3y1
+     */
+    public class Solution {
+        private final int MOD = 1000000007;
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param n int整型 被划分的数
+         * @param k int整型 化成k份
+         * @return int整型
+         */
+        public int divideNumber (int n, int k) {
+            return solution(n, k);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[i][j]表示将整数i分成j份的方案数
+         * 
+         * i<j时
+         * dp[i][j] = 0
+         *
+         * i=j时
+         * dp[i][j] = 1
+         * 
+         * i>j时:
+         * 2种分法
+         * (1) 先把第1份置为1(保证该种分法至少有一份为1), 剩下i-1分到其余j-1份中, 有dp[i-1][j-1]种方案
+         * (2) 先把所有j份置1(保证该种分法所有份至少为2), 剩下i-j分到j份中, 有dp[i-j][j]种方案
+         *
+         * 可见递推式:
+         * 
+         *            { 0                          , i<j
+         * dp[i][j] = { 1                          , i=j
+         *            { dp[i-1][j-1] + dp[i-j][j]  , i>j
+         * 
+         * @param n
+         * @param k
+         * @return
+         */
+        private int solution(int n, int k){
+            int[][] dp = new int[n+1][k+1];
+            dp[0][0] = 1;
+            for(int i=1; i<=n; i++){
+                for(int j=1; j<=k; j++){
+                    if(i >= j){
+                        dp[i][j] = (dp[i-1][j-1] + dp[i-j][j]) % MOD;
+                    }
+                }
+            }
+    
+            return dp[n][k];
+        }
+    }
+
+  
+

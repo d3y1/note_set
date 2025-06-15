@@ -1,0 +1,137 @@
+# java-NC244 对链表进行插入排序
+
+
+    import java.util.*;
+    
+    /*
+     * public class ListNode {
+     *   int val;
+     *   ListNode next = null;
+     *   public ListNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC244 对链表进行插入排序
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param head ListNode类
+         * @return ListNode类
+         */
+        public ListNode insertionSortList (ListNode head) {
+            // return solution1(head);
+            // return solution2(head);
+            return solution3(head);
+        }
+    
+        /**
+         * 插入排序
+         * @param head
+         * @return
+         */
+        private ListNode solution1(ListNode head){
+            if(head == null){
+                return null;
+            }
+            if(head.next == null){
+                return head;
+            }
+    
+            ListNode dummyHead = new ListNode(-1);
+            dummyHead.next = head;
+            ListNode cur = head.next;
+            head.next = null;
+    
+            ListNode pre,tmp;
+            while(cur != null){
+                pre = dummyHead;
+                while(true){
+                    if(pre.next != null){
+                        if(cur.val <= pre.next.val){
+                            tmp = cur.next;
+                            cur.next = pre.next;
+                            pre.next = cur;
+                            cur = tmp;
+                            break;
+                        }else{
+                            pre = pre.next;
+                        }
+                    }else{
+                        tmp = cur.next;
+                        cur.next = pre.next;
+                        pre.next = cur;
+                        cur = tmp;
+                        break;
+                    }
+                }
+            }
+    
+            return dummyHead.next;
+        }
+    
+        /**
+         * 插入排序: 简化
+         * @param head
+         * @return
+         */
+        private ListNode solution2(ListNode head){
+            if(head == null){
+                return null;
+            }
+            if(head.next == null){
+                return head;
+            }
+    
+            ListNode dummyHead = new ListNode(-1);
+            dummyHead.next = head;
+            ListNode cur = head.next;
+            head.next = null;
+    
+            ListNode pre,tmp;
+            while(cur != null){
+                pre = dummyHead;
+                while(pre.next!=null && pre.next.val<cur.val){
+                    pre = pre.next;
+                }
+                tmp = cur.next;
+                cur.next = pre.next;
+                pre.next = cur;
+                cur = tmp;
+            }
+    
+            return dummyHead.next;
+        }
+    
+        /**
+         * 插入排序: 再简化
+         * @param head
+         * @return
+         */
+        private ListNode solution3(ListNode head){
+            ListNode dummyHead = new ListNode(-1);
+    
+            ListNode pre,tmp;
+            while(head != null){
+                pre = dummyHead;
+                while(pre.next!=null && pre.next.val<head.val){
+                    pre = pre.next;
+                }
+                tmp = head.next;
+                head.next = pre.next;
+                pre.next = head;
+                head = tmp;
+            }
+    
+            return dummyHead.next;
+        }
+    }
+
+  
+

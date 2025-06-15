@@ -1,0 +1,116 @@
+# java-NC192 二叉树的后序遍历
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC192 二叉树的后序遍历
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 程序入口
+         *
+         * @param root TreeNode类
+         * @return int整型一维数组
+         */
+        public int[] postorderTraversal (TreeNode root) {
+            return solution1(root);
+            // return solution2(root);
+        }
+    
+        /**
+         * dfs
+         * @param root
+         * @return
+         */
+        private int[] solution1(TreeNode root){
+            List<Integer> list = new ArrayList<>();
+    
+            postorder(list, root);
+    
+            int[] result = new int[list.size()];
+            for(int i=0; i<list.size(); i++){
+                result[i] = list.get(i);
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 递归
+         * @param list
+         * @param root
+         */
+        private void postorder(List<Integer> list, TreeNode root){
+            // 空节点
+            if(root == null){
+                return;
+            }
+    
+            // 左子树
+            postorder(list, root.left);
+            // 右子树
+            postorder(list, root.right);
+            // 根结点
+            list.add(root.val);
+        }
+    
+        /**
+         * 非递归: 栈
+         * @param root
+         * @return
+         */
+        private int[] solution2(TreeNode root){
+            List<Integer> list = new ArrayList<>();
+            Stack<TreeNode> stack = new Stack<>();
+    
+            TreeNode curr;
+            // 上次访问
+            TreeNode last = null;
+            while(root!=null || !stack.isEmpty()){
+                // 最左边
+                while(root != null){
+                    stack.push(root);
+                    root = root.left;
+                }
+                
+                curr = stack.pop();
+                // 右节点为空或已访问
+                if(curr.right==null || curr.right==last){
+                    // 访问当前节点
+                    list.add(curr.val);
+                    last = curr;
+                }
+                // 右节点非空且未访问
+                else{
+                    // 当前节点再次入栈
+                    stack.push(curr);
+                    root = curr.right;
+                }
+            }
+            
+            int[] result = new int[list.size()];
+            for(int i=0; i<list.size(); i++){
+                result[i] = list.get(i);
+            }
+            
+            return result;
+        }
+    }
+
+  
+

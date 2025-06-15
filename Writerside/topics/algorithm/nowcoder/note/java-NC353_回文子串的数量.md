@@ -1,0 +1,143 @@
+# java-NC353 回文子串的数量
+
+
+    import java.util.*;
+    
+    /**
+     * NC353 回文子串的数量
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param str string字符串
+         * @return int整型
+         */
+        public int Substrings (String str) {
+            // return solution1(str);
+            // return solution2(str);
+            return solution3(str);
+        }
+    
+        /**
+         * 模拟法
+         * @param str
+         * @return
+         */
+        private int solution1(String str){
+            int count = 0;
+            for(int i=0; i<str.length(); i++){
+                for(int j=0; j<=i; j++){
+                    if(str.charAt(j) == str.charAt(i)){
+                        if(isPalindrome(str.substring(j,i+1))){
+                            count++;
+                        }
+                    }
+                }
+            }
+    
+            return count;
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[j][i]表示子串(从j到i)是否为回文串
+         *
+         *            { dp[j+1][i-1] , str.charAt(j) == str.charAt(i)
+         * dp[j][i] = {
+         *            { false        , str.charAt(j) != str.charAt(i)
+         *
+         * @param str
+         * @return
+         */
+        private int solution2(String str){
+            int len = str.length();
+            boolean[][] dp = new boolean[len][len];
+    
+            int count = 0;
+            for(int i=0; i<len; i++){
+                for(int j=0; j<=i; j++){
+                    if(str.charAt(j) == str.charAt(i)){
+                        if(i-j <= 1){
+                            count++;
+                            dp[j][i] = true;
+                        }else{
+                            if(dp[j+1][i-1]){
+                                count++;
+                                dp[j][i] = true;
+                            }
+                        }
+                    }
+                }
+            }
+    
+            return count;
+        }
+    
+        /**
+         * 双指针中心扩展法
+         * @param str
+         * @return
+         */
+        private int solution3(String str){
+            int len = str.length();
+            int count = 0;
+    
+            for(int i=0; i<len; i++){
+                // 奇回文
+                count += expand(str, i, i);
+                // 偶回文
+                count += expand(str, i, i+1);
+            }
+    
+            return count;
+        }
+    
+        /**
+         * 中心扩展法
+         * @param str
+         * @param i
+         * @param j
+         * @return
+         */
+        private int expand(String str, int i, int j){
+            int count = 0;
+            while(0<=i && j<str.length() && str.charAt(i--)==str.charAt(j++)){
+                count++;
+            }
+    
+            return count;
+        }
+    
+        /**
+         * 是否回文串
+         * 比checkPalindrome()效率高
+         * @param str
+         * @return
+         */
+        private boolean isPalindrome(String str){
+            for(int i=0,j=str.length()-1; i<=j; i++,j--){
+                if(str.charAt(i) != str.charAt(j)){
+                    return false;
+                }
+            }
+    
+            return true;
+        }
+    
+        /**
+         * 校验回文串
+         * @param str
+         * @return
+         */
+        private boolean checkPalindrome(String str){
+            StringBuilder sb = new StringBuilder(str);
+            return sb.reverse().toString().equals(str);
+        }
+    }
+
+  
+

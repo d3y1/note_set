@@ -1,0 +1,115 @@
+# java-ZJ20 雀魂启动！
+
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.Scanner;
+    import java.util.stream.Collectors;
+    
+    public class Main {
+        private static final int NUM = 13;
+        private static final int TOTAL = 14;
+        private static final int KIND = 9;
+    
+        public static void main(String[] args){
+            Scanner in=new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution(in);
+            }
+        }
+    
+        /**
+         * 模拟法
+         * @param in
+         */
+        private static void solution(Scanner in){
+            int[] cards = new int[NUM+1];
+            int[] bucket = new int[KIND+1];
+            int[] helper = new int[KIND+1];
+    
+            for(int i=1; i<=NUM; i++){
+                cards[i] = in.nextInt();
+                bucket[cards[i]]++;
+            }
+    
+            List<Integer> result = new ArrayList<>();
+            for(int i=1; i<=9; i++){
+                if(bucket[i] < 4){
+                    System.arraycopy(bucket,1, helper,1, KIND);
+                    // 取当前牌i(第14张牌)
+                    helper[i]++;
+                    if(canHu(helper, TOTAL,false)){
+                        result.add(i);
+                    }
+                }
+            }
+    
+            if(result.isEmpty()){
+                System.out.println(0);
+            }else{
+                System.out.println(result.stream().map(Object::toString).collect(Collectors.joining(" ")));
+            }
+        }
+    
+        /**
+         * 回溯
+         * @param helper
+         * @param total
+         * @param hasHead
+         * @return
+         */
+        private static boolean canHu(int[] helper, int total, boolean hasHead){
+            // 胡牌: 即可以将14张牌匹配得剩下0张
+            if(total == 0){
+                return true;
+            }
+    
+            // 先确定雀头
+            if(!hasHead){
+                for(int i=1; i<=9; i++){
+                    // 雀头: 大于等于2
+                    if(helper[i] >= 2){
+                        helper[i] -= 2;
+                        if(canHu(helper,total-2,true)){
+                            return true;
+                        }
+                        helper[i] += 2;
+                    }
+                }
+                return false;
+            }else{
+                // 有雀头
+                for(int i=1; i<=9; i++){
+                    if(helper[i] > 0){
+                        // 匹配刻子
+                        if(helper[i] >= 3){
+                            helper[i] -= 3;
+                            if(canHu(helper,total-3, true)){
+                                return true;
+                            }
+                            helper[i] += 3;
+                        }
+    
+                        // 匹配顺子
+                        if(i+2<=9 && helper[i+1]>0 && helper[i+2]>0){
+                            helper[i]--;
+                            helper[i+1]--;
+                            helper[i+2]--;
+                            if(canHu(helper,total-3, true)){
+                                return true;
+                            }
+                            helper[i]++;
+                            helper[i+1]++;
+                            helper[i+2]++;
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        }
+    }
+
+  
+

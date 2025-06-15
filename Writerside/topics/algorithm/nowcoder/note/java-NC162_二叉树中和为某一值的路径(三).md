@@ -1,0 +1,179 @@
+# java-NC162 二叉树中和为某一值的路径(三)
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC162 二叉树中和为某一值的路径(三)
+     * @author d3y1
+     */
+    public class Solution {
+        private int cnt = 0;
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param root TreeNode类 
+         * @param sum int整型 
+         * @return int整型
+         */
+        public int FindPath (TreeNode root, int sum) {
+            // return solution1(root, sum);
+            // return solution2(root, sum);
+            return solution3(root, sum);
+        }
+    
+        /**
+         * 层序遍历: 自底向上
+         * @param root
+         * @param sum
+         * @return
+         */
+        private int solution1(TreeNode root, int sum){
+            if(root == null){
+                return 0;
+            }
+    
+            int val;
+    
+            Queue<QueueNode> queue = new LinkedList<>();
+            queue.offer(new QueueNode(root, null));
+    
+            QueueNode qNode;
+            TreeNode tNode;
+            QueueNode currNode;
+            while(!queue.isEmpty()){
+                qNode = queue.poll();
+                tNode = qNode.treeNode;
+    
+                currNode = qNode;
+                val = 0;
+                while(currNode != null){
+                    val += currNode.treeNode.val;
+                    if(val == sum){
+                        cnt++;
+                    }
+                    currNode = currNode.parent;
+                }
+    
+                if(tNode.left != null){
+                    queue.offer(new QueueNode(tNode.left, qNode));
+                }
+                if(tNode.right != null){
+                    queue.offer(new QueueNode(tNode.right, qNode));
+                }
+            }
+    
+            return cnt;
+        }
+    
+        private class QueueNode {
+            TreeNode treeNode;
+            QueueNode parent = null;
+            public QueueNode(TreeNode treeNode, QueueNode parent){
+                this.treeNode = treeNode;
+                this.parent = parent;
+            }
+        }
+    
+    
+        /**
+         * 递归: 自顶向下
+         * @param root
+         * @param sum
+         * @return
+         */
+        private int solution2(TreeNode root, int sum){
+            dfs(root, sum);
+            return cnt;
+        }
+    
+        /**
+         * dfs: 依次固定根结点
+         * @param root
+         * @param sum
+         */
+        private void dfs(TreeNode root, int sum){
+            if(root == null){
+                return;
+            }
+    
+            preOrder(root, sum);
+    
+            dfs(root.left, sum);
+            dfs(root.right, sum);
+        }
+    
+        /**
+         * 前序遍历
+         * @param root
+         * @param target
+         */
+        private void preOrder(TreeNode root, int target){
+            if(root == null){
+                return;
+            }
+    
+            if(root.val == target){
+                cnt++;
+            }
+    
+            preOrder(root.left, target-root.val);
+            preOrder(root.right, target-root.val);
+        }
+    
+        // preSum -> cnt
+        private HashMap<Integer,Integer> map = new HashMap<>();
+    
+        /**
+         * 递归+哈希: 自底向上
+         * @param root
+         * @param sum
+         * @return
+         */
+        private int solution3(TreeNode root, int sum){
+            map.put(0, 1);
+            return preOrder(root, sum, 0);
+        }
+    
+        /**
+         * 前序遍历
+         * @param root
+         * @param target
+         * @param preSum
+         * @return
+         */
+        private int preOrder(TreeNode root, int target, int preSum){
+            if(root == null){
+                return 0;
+            }
+    
+            int cnt = 0;
+            int curSum = root.val+preSum;
+            if(map.containsKey(curSum-target)){
+                cnt += map.get(curSum-target);
+            }
+    
+            map.put(curSum, map.getOrDefault(curSum, 0)+1);
+            cnt += preOrder(root.left, target, curSum);
+            cnt += preOrder(root.right, target, curSum);
+            map.put(curSum, map.get(curSum)-1);
+    
+            return cnt;
+        }
+    }
+
+  
+

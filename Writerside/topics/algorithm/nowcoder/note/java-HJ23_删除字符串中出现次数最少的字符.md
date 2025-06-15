@@ -1,0 +1,180 @@
+# java - HJ23 删除字符串中出现次数最少的字符
+
+
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.Comparator;
+    import java.util.HashMap;
+    import java.util.HashSet;
+    import java.util.Scanner;
+    import java.util.Map;
+    
+    /**
+     * HJ23 删除字符串中出现次数最少的字符
+     * @author d3y1
+     */
+    public class Main {
+        public static void main(String[] args) {
+            // solution1();
+            // solution2();
+            // solution22();
+            // solution3();
+            solution4();
+        }
+    
+        /**
+         * 字符串 + 哈希
+         */
+        private static void solution1(){
+            Scanner in = new Scanner(System.in);
+            while (in.hasNextLine()) {
+                String input = in.nextLine();
+                HashMap<Character,Integer> map = new HashMap<>();
+                for(char ch: input.toCharArray()){
+                    map.put(ch, map.getOrDefault(ch,0)+1);
+                }
+    
+                ArrayList<Map.Entry<Character,Integer>> list = new ArrayList<>(map.entrySet());
+                Collections.sort(list, new Comparator<Map.Entry<Character, Integer>>() {
+                    @Override
+                    public int compare(Map.Entry<Character, Integer> o1, Map.Entry<Character, Integer> o2) {
+                        return o1.getValue()-o2.getValue();
+                    }
+                });
+                // Collections.sort(list, (o1, o2) -> {
+                //     return o1.getValue()-o2.getValue();
+                // });
+                // Collections.sort(list, Comparator.comparingInt(Map.Entry::getValue));
+    
+                String result = input;
+                int min = list.get(0).getValue();
+                char key;
+                int val;
+                for(Map.Entry<Character,Integer> entry: list){
+                    key = entry.getKey();
+                    val = entry.getValue();
+                    if(val == min){
+                        result = result.replaceAll(String.valueOf(key), "");
+                    }else{
+                        break;
+                    }
+                }
+                
+                System.out.println(result);
+            }
+        }
+    
+        /**
+         * 字符串 + 哈希
+         */
+        private static void solution2(){
+            Scanner in = new Scanner(System.in);
+            while (in.hasNextLine()) {
+                String input = in.nextLine();
+                HashMap<Character,Integer> map = new HashMap<>();
+                for(char ch: input.toCharArray()){
+                    map.put(ch, map.getOrDefault(ch,0)+1);
+                }
+    
+                ArrayList<Integer> list = new ArrayList<>(map.values());
+                Collections.sort(list);
+                int min = list.get(0);
+    
+                StringBuilder sb = new StringBuilder();
+                for(char ch: input.toCharArray()){
+                    if(map.get(ch) != min){
+                        sb.append(ch);
+                    }
+                }
+    
+                System.out.println(sb);
+            }
+        }
+    
+        /**
+         * 字符串 + 哈希
+         */
+        private static void solution22(){
+            Scanner in = new Scanner(System.in);
+            while (in.hasNextLine()) {
+                String input = in.nextLine();
+                HashMap<Character,Integer> map = new HashMap<>();
+                for(char ch: input.toCharArray()){
+                    map.put(ch, map.getOrDefault(ch,0)+1);
+                }
+    
+                ArrayList<Integer> list = new ArrayList<>(map.values());
+                int min = Collections.min(list);
+    
+                StringBuilder sb = new StringBuilder();
+                for(char ch: input.toCharArray()){
+                    if(map.get(ch) != min){
+                        sb.append(ch);
+                    }
+                }
+    
+                System.out.println(sb);
+            }
+        }
+    
+        /**
+         * 字符串 + 哈希
+         */
+        private static void solution3(){
+            Scanner in = new Scanner(System.in);
+            while (in.hasNextLine()) {
+                String input = in.nextLine();
+                HashMap<Character,Integer> map = new HashMap<>();
+                for(char ch: input.toCharArray()){
+                    map.put(ch, map.getOrDefault(ch,0)+1);
+                }
+    
+                int min = Integer.MAX_VALUE;
+                for(char ch: map.keySet()){
+                    min = Math.min(min, map.get(ch));
+                }
+    
+                StringBuilder sb = new StringBuilder();
+                for(char ch: input.toCharArray()){
+                    if(map.get(ch) != min){
+                        sb.append(ch);
+                    }
+                }
+    
+                System.out.println(sb);
+            }
+        }
+    
+        /**
+         * 字符串 + 哈希
+         */
+        private static void solution4(){
+            Scanner in = new Scanner(System.in);
+            while (in.hasNextLine()) {
+                String input = in.nextLine();
+                int[] cnt = new int[26];
+                for(char ch: input.toCharArray()){
+                    cnt[ch-'a']++;
+                }
+    
+                int min = Integer.MAX_VALUE;
+                for(int val: cnt){
+                    if(val > 0){
+                        min = Math.min(min, val);
+                    }
+                }
+    
+                StringBuilder sb = new StringBuilder();
+                for(char ch: input.toCharArray()){
+                    if(cnt[ch-'a'] != min){
+                        sb.append(ch);
+                    }
+                }
+    
+                System.out.println(sb);
+            }
+        }
+    }
+
+  
+

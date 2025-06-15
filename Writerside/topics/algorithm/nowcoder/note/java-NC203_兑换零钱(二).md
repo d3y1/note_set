@@ -1,0 +1,52 @@
+# java-NC203 兑换零钱(二)
+
+
+    import java.util.*;
+    
+    /**
+     * NC203 兑换零钱(二)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 相同 -> MT13 拼凑面额
+         * @param target int整型
+         * @param nums int整型一维数组
+         * @return int整型
+         */
+        public int change (int target, int[] nums) {
+            return solution(target, nums);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[i]表示拼成金额i的组合个数
+         *
+         * dp[i] = dp[i-nums[0]] + dp[i-nums[1]] + dp[i-nums[2]] + ... + dp[i-nums[n-2]] + dp[i-nums[n-1]]
+         *
+         * @param target
+         * @param nums
+         * @return
+         */
+        private int solution(int target, int[] nums){
+            int[] dp = new int[target+1];
+            dp[0] = 1;
+    
+            int n = nums.length;
+            for(int i=0; i<n; i++){
+                for(int j=1; j<=target; j++){
+                    if(j >= nums[i]){
+                        dp[j] += dp[j-nums[i]];
+                    }
+                }
+            }
+    
+            return dp[target];
+        }
+    }
+
+  
+

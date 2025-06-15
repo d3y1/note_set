@@ -1,0 +1,104 @@
+# java-NC392 参加会议的最大数目
+
+
+    import java.util.*;
+    
+    /**
+     * NC392 参加会议的最大数目
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param meetings int整型ArrayList<ArrayList<>>
+         * @return int整型
+         */
+        public int attendmeetings (ArrayList<ArrayList<Integer>> meetings) {
+            // return solution1(meetings);
+            return solution2(meetings);
+        }
+    
+        /**
+         * 贪心+排序: 直接排序会有问题!
+         * @param meetings
+         * @return
+         */
+        private int solution1(ArrayList<ArrayList<Integer>> meetings){
+            Collections.sort(meetings, new Comparator<ArrayList<Integer>>(){
+                @Override
+                public int compare(ArrayList<Integer> o1, ArrayList<Integer> o2){
+                    if(o1.get(1).equals(o2.get(1))){
+                        return o1.get(0)-o2.get(0);
+                    }else{
+                        return o1.get(1)-o2.get(1);
+                    }
+                }
+            });
+    
+            int result = 0;
+            int curDay = 0;
+            int start,end;
+            // 贪心
+            // 测试用例: [[1,3],[3,3],[2,4],[3,4]]    [[1,3],[1,4],[2,3],[3,3]]
+            for(ArrayList<Integer> meeting: meetings){
+                start = meeting.get(0);
+                end = meeting.get(1);
+                if(start > end){
+                    continue;
+                }
+                if(curDay <= end){
+                    curDay = Math.max(curDay, start);
+                    result++;
+                    curDay++;
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 贪心+最小堆+排序
+         * @param meetings
+         * @return
+         */
+        private int solution2(ArrayList<ArrayList<Integer>> meetings){
+            int n = meetings.size();
+            // Collections.sort(meetings, (o1, o2) -> (o1.get(0)-o2.get(0)));
+            Collections.sort(meetings, Comparator.comparingInt(o -> o.get(0)));
+    
+            PriorityQueue<Integer> minEndHeap = new PriorityQueue<>();
+    
+            int result = 0;
+            // 当前天数
+            int curDay = meetings.get(0).get(0);
+            // 贪心
+            for(int i=0; i<n||!minEndHeap.isEmpty();){
+                // 会议入堆(按照开始时间判断)
+                while(i<n && meetings.get(i).get(0)==curDay){
+                    // 结束时间入堆
+                    minEndHeap.offer(meetings.get(i).get(1));
+                    i++;
+                }
+    
+                // 会议排除(按照结束时间)(过期)
+                while(!minEndHeap.isEmpty() && minEndHeap.peek()<curDay){
+                    minEndHeap.poll();
+                }
+    
+                // 会议选择(一天一个会议)
+                if(!minEndHeap.isEmpty()){
+                    minEndHeap.poll();
+                    result++;
+                }
+    
+                curDay++;
+            }
+    
+            return result;
+        }
+    }
+
+  
+

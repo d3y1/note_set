@@ -1,0 +1,124 @@
+# java-JD11 回文
+
+
+    import java.util.Scanner;
+    
+    /**
+     * JD11 回文
+     * @author d3y1
+     */
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                solution2(in);
+            }
+        }
+    
+        /**
+         * 模拟法
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            String s = in.nextLine();
+            int len = s.length();
+    
+            int result = 0;
+            for(int i=0; i<len; i++){
+                if(isPalindrome(s.substring(i))){
+                    result = len+i;
+                    break;
+                }
+            }
+    
+            System.out.println(result);
+        }
+    
+        /**
+         * 模拟法
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            String s = in.nextLine();
+            int len = s.length();
+    
+            int result;
+            int resultOdd = Integer.MAX_VALUE;
+            int resultEven = Integer.MAX_VALUE;
+            if(checkPalindrome(s)){
+                result = len;
+            }else{
+                int index = len/2;
+                boolean found = false;
+                for(int i=index; i<len; i++){
+                    // odd
+                    for(int left=i-1,right=i+1; 0<=left&&right<=len; left--,right++){
+                        if(right == len){
+                            resultOdd = len+left+1;
+                            found = true;
+                            break;
+                        }else if(s.charAt(left) == s.charAt(right)){
+                            continue;
+                        }else{
+                            break;
+                        }
+                    }
+    
+                    // even
+                    for(int left=i,right=i+1; 0<=left&&right<=len; left--,right++){
+                        if(right == len){
+                            resultEven = len+left+1;
+                            found = true;
+                            break;
+                        }else if(s.charAt(left) == s.charAt(right)){
+                            continue;
+                        }else{
+                            break;
+                        }
+                    }
+    
+                    if(found){
+                        break;
+                    }
+                }
+    
+                result = Math.min(resultOdd, resultEven);
+            }
+    
+            System.out.println(result);
+        }
+    
+        /**
+         * 是否回文串
+         * @param s
+         * @return
+         */
+        private static boolean isPalindrome(String s){
+            StringBuilder sb = new StringBuilder(s);
+            return s.equals(sb.reverse().toString());
+        }
+    
+        /**
+         * 是否回文串
+         * @param s
+         * @return
+         */
+        private static boolean checkPalindrome(String s){
+            int left = 0;
+            int right = s.length()-1;
+            while(left < right){
+                if(s.charAt(left) != s.charAt(right)){
+                    return false;
+                }
+                left++;
+                right--;
+            }
+            
+            return true;
+        }
+    }
+
+  
+

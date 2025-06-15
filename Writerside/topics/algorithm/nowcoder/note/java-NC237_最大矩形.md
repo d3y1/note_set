@@ -1,0 +1,112 @@
+# java-NC237 最大矩形
+
+
+    import java.util.*;
+    
+    /**
+     * NC237 最大矩形
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param matrix int整型二维数组
+         * @return int整型
+         */
+        public int maximalRectangle (int[][] matrix) {
+            return solution(matrix);
+        }
+    
+        /**
+         * 动态规划 + 单调栈
+         *
+         * heights[i][j]表示以第i行为底的矩形图的第j列的高度
+         *
+         *                 { 0                    , matrix[i-1][j-1] == 0
+         * heights[i][j] = {
+         *                 { heights[i-1][j] + 1  , matrix[i-1][j-1] == 1
+         *
+         *
+         * matrix
+         * i\j 1 2 3 4 5
+         * 1   1 0 1 0 0
+         * 2   1 1 1 1 0
+         * 3   1 1 1 1 1
+         * 4   1 0 0 1 0
+         *
+         * heights[i][j]
+         * i\j 1 2 3 4 5
+         * 1   1 0 1 0 0
+         * 2   2 1 2 1 0
+         * 3   3 2 3 2 1
+         * 4   4 0 0 3 0
+         *
+         * @param matrix
+         * @return
+         */
+        private int solution(int[][] matrix){
+            int n = matrix.length;
+            int m = matrix[0].length;
+    
+            int[][] heights = new int[n+1][m+1];
+    
+            // 以第i行为底的矩形图的第j列的高度
+            for(int i=1; i<=n; i++){
+                for(int j=1; j<=m; j++){
+                    if(matrix[i-1][j-1] == 1){
+                        heights[i][j] = heights[i-1][j] + 1;
+                    }
+                }
+            }
+    
+            Stack<Integer> leftStack;
+            Stack<Integer> rightStack;
+            HashMap<Integer, Integer> leftMap;
+            HashMap<Integer, Integer> rightMap;
+    
+            int area = 0;
+            // 分别计算以各行为底的矩形图
+            for(int i=1; i<=n; i++){
+                leftStack = new Stack<>();
+                rightStack = new Stack<>();
+                leftMap = new HashMap<>();
+                rightMap = new HashMap<>();
+                int height;
+                int index;
+                // 单调栈
+                for(int j=1; j<=m; j++){
+                    height = heights[i][j];
+                    // 单调增 从左往右 查找左边第一个小于当前元素的索引 0-左边界(表示未找到)
+                    while(!leftStack.isEmpty() && height<=heights[i][leftStack.peek()]){
+                        leftStack.pop();
+                    }
+                    index = leftStack.isEmpty()?0:leftStack.peek();
+                    leftMap.put(j, index);
+                    leftStack.push(j);
+                }
+                // 单调栈
+                for(int j=m; j>0; j--){
+                    height = heights[i][j];
+                    // 单调增 从右往左 查找右边第一个小于当前元素的索引 (m+1)-右边界(表示未找到)
+                    while(!rightStack.isEmpty() && height<=heights[i][rightStack.peek()]){
+                        rightStack.pop();
+                    }
+                    index = rightStack.isEmpty()?m+1:rightStack.peek();
+                    rightMap.put(j, index);
+                    rightStack.push(j);
+                }
+                
+                // 计算当前矩形图 最大矩形面积
+                for(int j=1; j<=m; j++){
+                    area = Math.max(area, heights[i][j]*(rightMap.get(j)-leftMap.get(j)-1));
+                }
+            }
+    
+            return area;
+        }
+    }
+
+  
+

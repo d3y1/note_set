@@ -1,0 +1,76 @@
+# java-QQ10 石子合并
+
+
+    import java.util.PriorityQueue;
+    import java.util.Scanner;
+    
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                solution2(in);
+            }
+        }
+    
+        /**
+         * 模拟法: 数组
+         *
+         * n=4时
+         * a b c d
+         *
+         * 从前往后
+         * score = a*b + (a+b)*c + (a+b+c)*d = ab+ac+ad+bc+bd+cd
+         *
+         * 从后往前
+         * score = c*d + (c+d)*b + (b+c+d)*a = ab+ac+ad+bc+bd+cd
+         *
+         * 其他情况同理, 不管什么顺序, 结果都一样.
+         *
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            int n = in.nextInt();
+    
+            int[] w = new int[n];
+            int sum = 0;
+            int score = 0;
+            for(int i=0; i<n; i++){
+                w[i] = in.nextInt();
+                if(i > 0){
+                    sum += w[i-1];
+                    score += sum*w[i];
+                }
+            }
+    
+            System.out.println(score);
+        }
+    
+        /**
+         * 模拟法: 最大堆
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            int n = in.nextInt();
+    
+            PriorityQueue<Integer> maxHeap = new PriorityQueue<>((o1, o2) -> o2-o1);
+            for(int i=1; i<=n; i++){
+                maxHeap.offer(in.nextInt());
+            }
+    
+            int score = 0;
+            int max1,max2;
+            while(maxHeap.size() > 1){
+                max1 = maxHeap.poll();
+                max2 = maxHeap.poll();
+                score += max1*max2;
+                maxHeap.offer(max1+max2);
+            }
+    
+            System.out.println(score);
+        }
+    }
+
+  
+

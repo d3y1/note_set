@@ -1,0 +1,160 @@
+# java-NC302 环形数组的连续子数组最大和
+
+
+    import java.util.*;
+    
+    /**
+     * NC302 环形数组的连续子数组最大和
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型ArrayList
+         * @return int整型
+         */
+        public int maxSubarraySumCircular (ArrayList<Integer> nums) {
+            // return solution1(nums);
+            return solution2(nums);
+            // return solution3(nums);
+        }
+    
+        /**
+         * 动态规划 + 前缀和: OOM
+         *
+         * dp[i][j]表示从第i个数到第j个数的子数组的和
+         *
+         * dp[i][j] = pre[j] - pre[i-1]  , 1<=i<=n i<=j<=n
+         *
+         * @param nums
+         * @return
+         */
+        private int solution1(ArrayList<Integer> nums){
+            int n = nums.size();
+    
+            // 前缀和
+            int[] pre = new int[n+1];
+            for(int i=1; i<=n; i++){
+                pre[i] = pre[i-1] + nums.get(i-1);
+            }
+    
+            int sum = pre[n];
+            int max = Integer.MIN_VALUE;
+            int[][] dp = new int[n+1][n+1];
+            // for(int i=1; i<=n; i++){
+            //     for(int j=1; j<=n; j++){
+            //         if(i <= j){
+            //             dp[i][j] = pre[j] - pre[i-1];
+            //         }else{
+            //             dp[i][j] = sum + (pre[j] - pre[i-1]);
+            //         }
+            //         max = Math.max(max, dp[i][j]);
+            //     }
+            // }
+            for(int i=1; i<=n; i++){
+                for(int j=i; j<=n; j++){
+                    dp[i][j] = pre[j] - pre[i-1];
+                    if(i==1 && j==n){
+                        max = Math.max(max, dp[i][j]);
+                    }else{
+                        max = Math.max(max, Math.max(dp[i][j],sum-dp[i][j]));
+                    }
+                }
+            }
+    
+            return max;
+        }
+    
+        /**
+         * 动态规划 + 前缀和
+         *
+         * dp[i]表示以数组中第i个数为结尾的连续子数组的最大和
+         * 
+         * // 情形1 不考虑环形 结果为 中间某一连续部分
+         * dp[i] = Math.max(dp[i-1],0) + nums.get(i-1)  , 1<=i<=n
+         * max = Math.max(max, dp[i])
+         * 
+         * // 情形2 考虑环形 结果为 前面最大连续部分 + 后面固定连续部分
+         * max = Math.max(max, leftMax[i]+right[i])
+         *
+         * @param nums
+         * @return
+         */
+        private int solution2(ArrayList<Integer> nums){
+            int n = nums.size();
+    
+            // 前缀和
+            int[] pre = new int[n+1];
+            for(int i=1; i<=n; i++){
+                pre[i] = pre[i-1] + nums.get(i-1);
+            }
+    
+            int[] dp = new int[n+1];
+            int max = Integer.MIN_VALUE;
+            int sum = pre[n];
+            int[] leftMax = new int[n+1];
+            int[] right = new int[n+1];
+            for(int i=1; i<=n; i++){
+                // 情形1 不考虑环形 结果为 中间某一连续部分
+    //            if(dp[i-1] > 0){
+    //                dp[i] = dp[i-1] + nums.get(i-1);
+    //            }else{
+    //                dp[i] = nums.get(i-1);
+    //            }
+                dp[i] = Math.max(dp[i-1],0) + nums.get(i-1);
+                max = Math.max(max, dp[i]);
+    
+                // 情形2 考虑环形 结果为 前面最大连续部分 + 后面固定连续部分
+                leftMax[i] = Math.max(leftMax[i-1], pre[i-1]);
+                right[i] = sum - pre[i-1];
+                max = Math.max(max, leftMax[i]+right[i]);
+            }
+            
+            return max;
+        }
+    
+        /**
+         * 动态规划: 空间优化
+         * 
+         * preMax = Math.max(preMax,0) + nums.get(i-1)
+         * preMin = Math.min(preMin,0) + nums.get(i-1)
+         * 
+         * max = Math.max(max, preMax)
+         * min = Math.min(min, preMin)
+         * 
+         * @param nums
+         * @return
+         */
+        private int solution3(ArrayList<Integer> nums){
+            int n = nums.size();
+    
+            int sum = 0;
+            for(int i=1; i<=n; i++){
+                sum += nums.get(i-1);
+            }
+            
+            int max = Integer.MIN_VALUE;
+            int min = Integer.MAX_VALUE;
+            for(int i=1,preMin=0,preMax=0; i<=n; i++){
+                // 情形1 不考虑环形 结果为 中间某一连续部分最大和 max
+                preMax = Math.max(preMax,0) + nums.get(i-1);
+                // 情形2 考虑环形 结果为 sum-中间某一连续部分最小和 sum-min
+                preMin = Math.min(preMin,0) + nums.get(i-1);
+    
+                max = Math.max(max, preMax);
+                min = Math.min(min, preMin);
+            }
+    
+            // 特殊情况 全为负数
+            if(max < 0){
+                return max;
+            }
+            
+            return Math.max(max, sum-min);
+        }
+    }
+
+  
+

@@ -1,0 +1,159 @@
+# java-NC268 矩形覆盖
+
+
+    import java.util.*;
+    
+    /**
+     * NC268 矩形覆盖
+     * @author d3y1
+     */
+    public class Solution {
+        public int rectCover(int target) {
+            // return solution1(target);
+            return solution2(target);
+            // return solution3(target);
+            // return solution4(target);
+        }
+    
+        /**
+         * 数学法
+         *
+         * 举例子找规律(画图) => 2个2*1的小矩形横放看做一个整体(日字形) => 转化为 日字形与小矩形竖放的组合数
+         * 可得:
+         * F(n) = C(n,0) + C(n-1,1) + C(n-2,2) + ... + C(n-n/2,n/2)
+         *
+         * @param target
+         * @return
+         */
+        private int solution1(int target){
+            if(target == 0){
+                return 0;
+            }
+    
+            int result = 0;
+    
+            for(int i=0; i<=target/2; i++){
+                result += C(target-i, i);
+            }
+    
+            return result;
+        }
+    
+        // C(n,k)
+        private long C(int n, int k){
+            k = Math.max(k, n-k);
+    
+            long up=1,down=1;
+            for(int i=1; i<=n-k; i++){
+                up *= n-i+1;
+                down *= i;
+            }
+    
+            return up/down;
+        }
+    
+        /**
+         * 动态规划
+         *
+         * 举例子找规律(画图) => 2个2*1的小矩形横放看做一个整体(日字形)
+         * 可得:
+         * F(1) = 1
+         * F(2) = 2
+         * F(3) = 3 = 1 + 2
+         * F(4) = 5 = 2 + 3
+         * F(5) = 8 = 3 + 5
+         * F(6) = 13= 5 + 8
+         * ...
+         * F(n) = F(n-1) + F(n-2)  , n>=3
+         * 
+         * 结合图形理解F(n):
+         * F(n-1)里每个方案最右边竖放一个小矩形
+         * F(n-2)里每个方案最右边横放两个小矩形(日字形)
+         *
+         * dp[i]表示有i个小矩形时的覆盖方法数
+         * 
+         * dp[i] = dp[i-1] + dp[i-2]  , i>=3
+         *
+         * @param target
+         * @return
+         */
+        private int solution2(int target){
+            if(target == 0){
+                return 0;
+            }
+            if(target == 1){
+                return 1;
+            }
+    
+            int[] dp = new int[target+1];
+            dp[1] = 1;
+            dp[2] = 2;
+    
+            for(int i=3; i<=target; i++){
+                dp[i] = dp[i-1] + dp[i-2];
+            }
+    
+            return dp[target];
+        }
+    
+        /**
+         * 动态规划: 空间优化
+         * @param target
+         * @return
+         */
+        private int solution3(int target){
+            if(target == 0){
+                return 0;
+            }
+            if(target == 1){
+                return 1;
+            }
+            if(target == 2){
+                return 2;
+            }
+    
+            int result = 0;
+            int head = 1, pre = 2;
+    
+            for(int i=3; i<=target; i++){
+                result = pre + head;
+                head = pre;
+                pre = result;
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 递归
+         * @param target
+         * @return
+         */
+        private int solution4(int target){
+            if(target == 0){
+                return 0;
+            }
+            
+            return F(target);
+        }
+    
+        /**
+         * F(n)
+         * @param n
+         * @return
+         */
+        private int F(int n){
+            if(n == 1){
+                return 1;
+            }
+            if(n == 2){
+                return 2;
+            }
+            
+            return F(n-1)+F(n-2);
+        }
+    }
+    
+
+  
+

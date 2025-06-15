@@ -1,0 +1,161 @@
+# java-NC273 树的子结构
+
+
+    import java.util.*;
+    /**
+    public class TreeNode {
+        int val = 0;
+        TreeNode left = null;
+        TreeNode right = null;
+    
+        public TreeNode(int val) {
+            this.val = val;
+        }
+    }
+    */
+    
+    /**
+     * NC273 树的子结构
+     * @author d3y1
+     */
+    public class Solution {
+        private boolean isSubtree = false;
+    
+        public boolean HasSubtree(TreeNode root1, TreeNode root2){
+            return solution1(root1, root2);
+            // return solution2(root1, root2);
+        }
+    
+        /**
+         * 递归: 前序遍历
+         * @param root1
+         * @param root2
+         * @return
+         */
+        private boolean solution1(TreeNode root1, TreeNode root2){
+            if(root1==null || root2 == null){
+                return false;
+            }
+    
+            preOrder(root1, root2);
+    
+            return isSubtree;
+        }
+    
+        /**
+         * 前序遍历
+         * @param root1
+         * @param root2
+         */
+        private void preOrder(TreeNode root1, TreeNode root2){
+            if(isSubtree){
+                return;
+            }
+            if(root1 == null){
+                return;
+            }
+    
+            if(root1.val == root2.val){
+                isSubtree = verify(root1, root2);
+            }
+            preOrder(root1.left, root2);
+            preOrder(root1.right, root2);
+        }
+    
+        /**
+         * 校验: 递归
+         * @param root1
+         * @param root2
+         * @return
+         */
+        private boolean verify(TreeNode root1, TreeNode root2){
+            if(root2 == null){
+                return true;
+            }
+    
+            if(root1==null || root1.val!=root2.val){
+                return false;
+            }else{
+                return verify(root1.left, root2.left) && verify(root1.right, root2.right);
+            }
+        }
+    
+        /**
+         * 迭代: 层序遍历
+         * @param root1
+         * @param root2
+         * @return
+         */
+        private boolean solution2(TreeNode root1, TreeNode root2){
+            if(root1==null || root2 == null){
+                return false;
+            }
+    
+            levelOrder(root1, root2);
+    
+            return isSubtree;
+        }
+    
+        /**
+         * 层序遍历
+         * @param root1
+         * @param root2
+         */
+        private void levelOrder(TreeNode root1, TreeNode root2){
+            Queue<TreeNode> queue1 = new LinkedList<>();
+            queue1.offer(root1);
+    
+            TreeNode node1;
+            while(!queue1.isEmpty()){
+                node1 = queue1.poll();
+                if(node1.val == root2.val){
+                    isSubtree = check(node1, root2);
+                    if(isSubtree){
+                        return;
+                    }
+                }
+                if(node1.left != null){
+                    queue1.offer(node1.left);
+                }
+                if(node1.right != null){
+                    queue1.offer(node1.right);
+                }
+            }
+        }
+    
+        /**
+         * 校验: 队列
+         * @param root1
+         * @param root2
+         * @return
+         */
+        private boolean check(TreeNode root1, TreeNode root2){
+            Queue<TreeNode> queue1 = new LinkedList<>();
+            Queue<TreeNode> queue2 = new LinkedList<>();
+            queue1.offer(root1);
+            queue2.offer(root2);
+    
+            TreeNode node1,node2;
+            while(!queue2.isEmpty()){
+                node1 = queue1.poll();
+                node2 = queue2.poll();
+                if(node1==null || node1.val!=node2.val){
+                    return false;
+                }
+                if(node2.left != null){
+                    queue1.offer(node1.left);
+                    queue2.offer(node2.left);
+                }
+                if(node2.right != null){
+                    queue1.offer(node1.right);
+                    queue2.offer(node2.right);
+                }
+            }
+    
+            return true;
+        }
+    }
+    
+
+  
+

@@ -1,0 +1,227 @@
+# java-NC102 在二叉树中找到两个节点的最近公共祖先
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC102 在二叉树中找到两个节点的最近公共祖先
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param root TreeNode类 
+         * @param o1 int整型 
+         * @param o2 int整型 
+         * @return int整型
+         */
+        public int lowestCommonAncestor (TreeNode root, int o1, int o2) {
+            // return solution1(root, o1, o2);
+            // return solution11(root, o1, o2);
+            // return solution2(root, o1, o2);
+            return solution22(root, o1, o2);
+        }
+    
+        /**
+         * 层序遍历
+         * @param root
+         * @param o1
+         * @param o2
+         * @return
+         */
+        private int solution1(TreeNode root, int o1, int o2){
+            Queue<QueueNode> queue = new LinkedList<>();
+            queue.offer(new QueueNode(root, null));
+    
+            ArrayList<Integer> list1 = new ArrayList<>();
+            ArrayList<Integer> list2 = new ArrayList<>();
+    
+            QueueNode qNode,currNode;
+            TreeNode tNode;
+            while(!queue.isEmpty()){
+                qNode = queue.poll();
+                tNode = qNode.treeNode;
+    
+                if(tNode.val == o1){
+                    list1.add(o1);
+                    currNode = qNode;
+                    while(currNode.parent != null){
+                        currNode = currNode.parent;
+                        list1.add(currNode.treeNode.val);
+                    }
+                }
+                if(tNode.val == o2){
+                    list2.add(o2);
+                    currNode = qNode;
+                    while(currNode.parent != null){
+                        currNode = currNode.parent;
+                        list2.add(currNode.treeNode.val);
+                    }
+                }
+    
+                if(tNode.left != null){
+                    queue.offer(new QueueNode(tNode.left, qNode));
+                }
+                if(tNode.right != null){
+                    queue.offer(new QueueNode(tNode.right, qNode));
+                }
+            }
+    
+            if(list1.contains(o2)){
+                return o2;
+            }
+            if(list2.contains(o1)){
+                return o1;
+            }
+            for(int val: list1){
+                if(list2.contains(val)){
+                    return val;
+                }
+            }
+    
+            return -1;
+        }
+        
+        private class QueueNode {
+            TreeNode treeNode = null;
+            QueueNode parent = null;
+            public QueueNode(TreeNode treeNode, QueueNode parent){
+                this.treeNode = treeNode;
+                this.parent = parent;
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////
+    
+        /**
+         * 层序遍历: 简化
+         * @param root
+         * @param o1
+         * @param o2
+         * @return
+         */
+        private int solution11(TreeNode root, int o1, int o2){
+            HashMap<Integer,Integer> parentMap = new HashMap<>();
+            Queue<TreeNode> queue = new LinkedList<>();
+    
+            parentMap.put(root.val, -1);
+            queue.offer(root);
+    
+            TreeNode tNode;
+            // o1 o2 都找到 -> 结束循环
+            while(!parentMap.containsKey(o1) || !parentMap.containsKey(o2)){
+                if(!queue.isEmpty()){
+                    tNode = queue.poll();
+                    if(tNode.left != null){
+                        queue.offer(tNode.left);
+                        parentMap.put(tNode.left.val, tNode.val);
+                    }
+                    if(tNode.right != null){
+                        queue.offer(tNode.right);
+                        parentMap.put(tNode.right.val, tNode.val);
+                    }
+                }
+            }
+    
+            HashSet<Integer> ancestorSet = new HashSet<>();
+            int val1 = o1;
+            while(parentMap.containsKey(val1)){
+                ancestorSet.add(val1);
+                val1 = parentMap.get(val1);
+            }
+    
+            int val2 = o2;
+            while(!ancestorSet.contains(val2)){
+                val2 = parentMap.get(val2);
+            }
+    
+            return val2;
+        }
+    
+        /////////////////////////////////////////////////////////////////////////////////////////
+    
+        /**
+         * 后序遍历
+         * @param root
+         * @param o1
+         * @param o2
+         * @return
+         */
+        private int solution2(TreeNode root, int o1, int o2){
+            return postOrder(root, o1, o2).val;
+        }
+    
+        private TreeNode postOrder(TreeNode root, int o1, int o2){
+            if(root==null || root.val==o1 || root.val==o2){
+                return root;
+            }
+    
+            TreeNode left = postOrder(root.left, o1, o2);
+            TreeNode right = postOrder(root.right, o1, o2);
+    
+            // 左子树 未找到
+            if(left == null){
+                return right;
+            }
+            // 右子树 未找到
+            if(right == null){
+                return left;
+            }
+    
+            // 一在左 一在右
+            return root;
+        }
+    
+        /////////////////////////////////////////////////////////////////////////////////////////
+    
+        /**
+         * 后序遍历
+         * @param root
+         * @param o1
+         * @param o2
+         * @return
+         */
+        private int solution22(TreeNode root, int o1, int o2){
+            return postorder(root, o1, o2);
+        }
+    
+        private int postorder(TreeNode root, int o1, int o2){
+            if(root == null){
+                return -1;
+            }
+            if(root.val==o1 || root.val==o2){
+                return root.val;
+            }
+    
+            int left = postorder(root.left, o1, o2);
+            int right = postorder(root.right, o1, o2);
+    
+            // 左子树 未找到
+            if(left == -1){
+                return right;
+            }
+            // 右子树 未找到
+            if(right == -1){
+                return left;
+            }
+    
+            // 一在左 一在右
+            return root.val;
+        }
+    }
+
+  
+

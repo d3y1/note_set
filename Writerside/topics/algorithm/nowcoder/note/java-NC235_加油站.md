@@ -1,0 +1,121 @@
+# java-NC235 加油站
+
+
+    import java.util.*;
+    
+    /**
+     * NC235 加油站
+     * @author d3y1
+     */
+    public class Solution {
+        private int n;
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param gas int整型一维数组
+         * @param cost int整型一维数组
+         * @return int整型
+         */
+        public int gasStation (int[] gas, int[] cost) {
+            return solution1(gas, cost);
+            // return solution2(gas, cost);
+        }
+    
+        /**
+         * 贪心
+         * 
+         *                 start
+         *                   |
+         *      i:  0  1  2  3  4
+         *    gas:  4  1  2  5  3
+         *   cost:  1  3  4  2  5
+         *   diff:  3 -2 -2  3 -2
+         * remain:  3  1 -1  3  1
+         *    sum:  3  1 -1  2  0
+         *    
+         * R-remain D-diff start=0
+         * R00 = D0 = 3
+         * R01 = D0+D1 = 3+(-2) = 1
+         * R02 = D0+D1+D2 = 3+(-2)+(-2) = -1, 小于0 => start = i+1 = 2+1 = 3
+         * start可从0直接到3
+         * 
+         * 推理:
+         * 若从1开始(start=1)
+         * D0 = 3 >= 0
+         * => D0+D1 >= D1 (从0开始尚且不行, 从1开始更是不行)
+         * 
+         * 若从2开始(start=2)
+         * D0+D1 = 1 >= 0
+         * D0+D1+D2 = -1 < 0
+         * => D2 < 0 (从2开始也是不行)
+         * 
+         * @param gas
+         * @param cost
+         * @return
+         */
+        private int solution1(int[] gas, int[] cost){
+            n = gas.length;
+    
+            int start = 0;
+            int remain = 0;
+            int sum = 0;
+            int diff;
+            for(int i=0; i<n; i++){
+                diff = gas[i]-cost[i];
+                remain += diff;
+                sum += diff;
+                if(remain < 0){
+                    start = (i+1)%n;
+                    remain = 0;
+                }
+            }
+    
+            return sum>=0?start:-1;
+        }
+    
+        /**
+         * 循环遍历
+         * @param gas
+         * @param cost
+         * @return
+         */
+        private int solution2(int[] gas, int[] cost){
+            n = gas.length;
+    
+            for(int i=0; i<n; i++){
+                if(gas[i] >= cost[i]){
+                    if(canTravel(gas, cost, i)){
+                        return i;
+                    }
+                }
+            }
+    
+            return -1;
+        }
+    
+        /**
+         * 能否绕环路行驶一周
+         * @param gas
+         * @param cost
+         * @param start 出发的加油站编号
+         * @return
+         */
+        private boolean canTravel(int[] gas, int[] cost, int start){
+            int remain = gas[start]-cost[start];
+            int next = (start+1)%n;
+            while(next != start){
+                remain += (gas[next]-cost[next]);
+                if(remain < 0){
+                    return false;
+                }
+                next = (next+1)%n;
+            }
+    
+            return true;
+        }
+    }
+
+  
+

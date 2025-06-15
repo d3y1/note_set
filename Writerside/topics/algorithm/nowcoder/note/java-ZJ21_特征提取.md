@@ -1,0 +1,138 @@
+# java-ZJ21 特征提取
+
+
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Scanner;
+    
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                // solution2(in);
+            }
+        }
+    
+        /**
+         * 模拟法: Map
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            int cases = in.nextInt();
+    
+            while(cases-- > 0){
+                int frames = in.nextInt();
+    
+                HashMap<String, Integer> lastMap = new HashMap<>();
+                HashMap<String, Integer> currMap;
+    
+                int num = in.nextInt();
+                while(num-- > 0){
+                    lastMap.put(new Identity(in.nextInt(), in.nextInt()).toString(), 1);
+                }
+    
+                int tmp;
+                int max = 1;
+                for(int i=2; i<=frames; i++){
+                    currMap = new HashMap<>();
+                    num = in.nextInt();
+                    Identity identity;
+                    while(num-- > 0){
+                        identity = new Identity(in.nextInt(), in.nextInt());
+                        if(lastMap.containsKey(identity.toString())){
+                            tmp = lastMap.get(identity.toString()) + 1;
+                            max = Math.max(max, tmp);
+                            currMap.put(identity.toString(), tmp);
+                        }else{
+                            currMap.put(identity.toString(), 1);
+                        }
+                    }
+                    lastMap = currMap;
+                }
+    
+                System.out.println(max);
+            }
+        }
+    
+    
+        /**
+         * 模拟法: List
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            int cases = in.nextInt();
+    
+            while(cases-- > 0){
+                List<Identity> identityList = new ArrayList<>();
+                int frames = in.nextInt();
+                for(int i=1; i<=frames; i++){
+                    int num = in.nextInt();
+                    while(num-- > 0){
+                        identityList.add(new Identity(i, in.nextInt(), in.nextInt()));
+                    }
+                }
+    
+                identityList.sort((o1, o2) -> {
+                    if(o1.x != o2.x){
+                        return o1.x - o2.x;
+                    }else{
+                        return o1.y - o2.y;
+                    }
+                });
+    
+                int size = identityList.size();
+                int tmp = 1;
+                int max = 1;
+                for(int i=1; i<size; i++){
+                    if(identityList.get(i).equals(identityList.get(i-1))){
+                        tmp++;
+                        max = Math.max(max, tmp);
+                    }else{
+                        tmp = 1;
+                    }
+                }
+    
+                System.out.println(max);
+            }
+        }
+    
+        private static class Identity{
+            int frameId;
+            int x;
+            int y;
+    
+            public Identity(int frameId, int x, int y){
+                this.frameId = frameId;
+                this.x = x;
+                this.y = y;
+            }
+    
+            public Identity(int x, int y){
+                this.x = x;
+                this.y = y;
+            }
+    
+            @Override
+            public String toString(){
+                return x+","+y;
+            }
+    
+            @Override
+            public boolean equals(Object o){
+                if(this == o){
+                    return true;
+                }
+                if(o == null || getClass() != o.getClass()){
+                    return false;
+                }
+                Identity identity = (Identity) o;
+                return frameId == identity.frameId+1 && x == identity.x && y == identity.y;
+            }
+        }
+    }
+
+  
+

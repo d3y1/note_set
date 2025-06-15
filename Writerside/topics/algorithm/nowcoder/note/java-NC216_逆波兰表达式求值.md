@@ -1,0 +1,54 @@
+# java-NC216 逆波兰表达式求值
+
+
+    import java.util.*;
+    
+    /**
+     * NC216 逆波兰表达式求值
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 
+         * @param tokens string字符串一维数组 
+         * @return int整型
+         */
+        public int evalRPN (String[] tokens) {
+            Stack<Integer> stack = new Stack<>();
+            int leftVal,rightVal;
+            for(String token: tokens){
+                switch(token){
+                    case "+": rightVal=stack.pop();leftVal=stack.pop();stack.push(leftVal+rightVal); break;
+                    case "-": rightVal=stack.pop();leftVal=stack.pop();stack.push(leftVal-rightVal); break;
+                    case "*": rightVal=stack.pop();leftVal=stack.pop();stack.push(leftVal*rightVal); break;
+                    case "/": rightVal=stack.pop();leftVal=stack.pop();stack.push(leftVal/rightVal); break;
+                    default: stack.push(Integer.parseInt(token)); break;
+                }
+            }
+    
+            // + - * /
+            // String regex = "[+\\-*/]";
+            // for(String token: tokens){
+            //     if(token.matches(regex)){
+            //         rightVal = stack.pop();
+            //         leftVal = stack.pop();
+            //         switch(token){
+            //             case "+": stack.push(leftVal+rightVal); break;
+            //             case "-": stack.push(leftVal-rightVal); break;
+            //             case "*": stack.push(leftVal*rightVal); break;
+            //             case "/": stack.push(leftVal/rightVal); break;
+            //             default: break;
+            //         }
+            //     }else{
+            //         stack.push(Integer.parseInt(token));
+            //     }
+            // }
+    
+            return stack.pop();
+        }
+    }
+
+  
+

@@ -1,0 +1,122 @@
+# java-NC178 打家劫舍(三)
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC178 打家劫舍(三)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param root TreeNode类
+         * @return int整型
+         */
+        public int rob (TreeNode root) {
+            return solution1(root);
+            // return solution2(root);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * 自底向上
+         *
+         * left[0]  表示不偷左子节点时可获得的最多金额
+         * left[1]  表示偷窃左子节点时可获得的最多金额
+         * right[0] 表示不偷右子节点时可获得的最多金额
+         * right[1] 表示偷窃右子节点时可获得的最多金额
+         * curr[0]  表示不偷当前节点时可获得的最多金额
+         * curr[1]  表示偷窃当前节点时可获得的最多金额
+         *
+         * curr[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1])
+         * curr[1] = root.val + left[0] + right[0]
+         *
+         * @param root
+         * @return
+         */
+        private int solution1(TreeNode root){
+            int[] result = new int[2];
+    
+            result = postOrder(root);
+    
+            return Math.max(result[0], result[1]);
+        }
+    
+        /**
+         * 后序遍历
+         * @param root
+         * @return
+         */
+        private int[] postOrder(TreeNode root){
+            if(root == null){
+                return new int[2];
+            }
+    
+            int[] left = postOrder(root.left);
+            int[] right = postOrder(root.right);
+    
+            int[] curr = new int[2];
+            // 不偷 当前节点
+            // curr[0] = Math.max(left[1]+right[1], Math.max(left[0]+right[0], Math.max(left[1]+right[0], left[0]+right[1])));
+            curr[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+            // 偷窃 当前节点 左右子节点都不能偷
+            curr[1] = root.val + left[0] + right[0];
+    
+            return curr;
+        }
+    
+        /**
+         * 递归: 遍历解空间: 超时
+         * @param root
+         * @return
+         */
+        private int solution2(TreeNode root){
+            int result = preOrder(root);
+    
+            return result;
+        }
+    
+        /**
+         * 前序遍历
+         * @param root
+         * @return
+         */
+        private int preOrder(TreeNode root){
+            if(root == null){
+                return 0;
+            }
+    
+            int[] curr = new int[2];
+            // 偷窃 当前节点
+            curr[1] = root.val;
+            if(root.left != null){
+                curr[1] += preOrder(root.left.left) + preOrder(root.left.right);
+            }
+            if(root.right != null){
+                curr[1] += preOrder(root.right.left) + preOrder(root.right.right);
+            }
+    
+            // 不偷 当前节点
+            curr[0] = preOrder(root.left) + preOrder(root.right);
+    
+            return Math.max(curr[0], curr[1]);
+        }
+    }
+
+  
+

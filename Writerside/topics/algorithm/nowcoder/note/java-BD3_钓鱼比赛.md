@@ -1,0 +1,62 @@
+# java-BD3 钓鱼比赛
+
+
+    import java.util.Scanner;
+    
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution(in);
+            }
+        }
+    
+        /**
+         * 数学法: 概率
+         * 注意按行读取数据!
+         * @param in
+         */
+        private static void solution(Scanner in){
+            String[] line = in.nextLine().split(" ");
+            int n = Integer.parseInt(line[0]);
+            int m = Integer.parseInt(line[1]);
+            int x = Integer.parseInt(line[2]);
+            int y = Integer.parseInt(line[3]);
+            int t = Integer.parseInt(line[4]);
+    
+            double[][] fishPond = new double[n+1][m+1];
+            double pSum = 0;
+            for(int i=1; i<=n; i++){
+                String[] probability = in.nextLine().split(" ");
+                for(int j=1; j<=m; j++){
+                    fishPond[i][j] = Double.parseDouble(probability[j-1]);
+                    pSum += fishPond[i][j];
+                }
+            }
+    
+            // cc
+            double p1 = fishPond[x][y];
+            // ss
+            double p2 = pSum/(n*m);
+    
+            String winner;
+            double p;
+            if(p1 > p2){
+                winner = "cc";
+                p = 1-Math.pow((1-p1),t);
+            }else if(p1 == p2){
+                winner = "equal";
+                p = 1-Math.pow((1-p1),t);
+            }else{
+                winner = "ss";
+                p = 1-Math.pow((1-p2),t);
+            }
+    
+            System.out.println(winner);
+            System.out.printf("%.2f%n",p);
+        }
+    }
+
+  
+

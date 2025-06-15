@@ -1,0 +1,92 @@
+# java-NC83 连续子数组的最大乘积
+
+
+    import java.util.*;
+    
+    /**
+     * NC83 连续子数组的最大乘积
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组
+         * @return int整型
+         */
+        public int maxProduct (int[] nums) {
+            return solution1(nums);
+            // return solution2(nums);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * max[i]表示以i为结尾的子数组的最大乘积
+         * min[i]表示以i为结尾的子数组的最小乘积
+         * 
+         *          { Math.max(max[i-1]*nums[i], nums[i]) , nums[i] >= 0
+         * max[i] = { 
+         *          { Math.max(min[i-1]*nums[i], nums[i]) , nums[i] < 0
+         *          
+         *          { Math.min(min[i-1]*nums[i], nums[i]) , nums[i] >= 0
+         * min[i] = { 
+         *          { Math.min(max[i-1]*nums[i], nums[i]) , nums[i] < 0
+         *
+         * @param nums
+         * @return
+         */
+        private int solution1(int[] nums){
+            int n = nums.length;
+            int[] max = new int[n];
+            int[] min = new int[n];
+            max[0] = nums[0];
+            min[0] = nums[0];
+    
+            for(int i=1; i<n; i++){
+                if(nums[i] >= 0){
+                    max[i] = Math.max(max[i-1]*nums[i], nums[i]);
+                    min[i] = Math.min(min[i-1]*nums[i], nums[i]);
+                }else{
+                    max[i] = Math.max(min[i-1]*nums[i], nums[i]);
+                    min[i] = Math.min(max[i-1]*nums[i], nums[i]);
+                }
+            }
+    
+            int result = Integer.MIN_VALUE;
+            for(int i=0; i<n; i++){
+                result = Math.max(result, max[i]);
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 滑动窗口: OOM
+         * @param nums
+         * @return
+         */
+        private int solution2(int[] nums){
+            int n = nums.length;
+            int[][] dp = new int[n][n];
+    
+            int max = Integer.MIN_VALUE;
+            for(int i=0; i<n; i++){
+                dp[i][i] = nums[i];
+                max = Math.max(max, dp[i][i]);
+            }
+    
+            for(int gap=1; gap<n; gap++){
+                for(int i=0; i+gap<n; i++){
+                    dp[i][i+gap] = dp[i][i+gap-1] * nums[i+gap];
+                    max = Math.max(max, dp[i][i+gap]);
+                }
+            }
+    
+            return max;
+        }
+    }
+
+  
+

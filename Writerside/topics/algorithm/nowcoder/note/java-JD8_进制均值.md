@@ -1,0 +1,87 @@
+# java-JD8 进制均值
+
+
+    import java.util.Scanner;
+    
+    /**
+     * JD8 进制均值
+     * @author d3y1
+     */
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution1(in);
+                solution2(in);
+            }
+        }
+    
+        /**
+         * 模拟法: 最大公约数
+         * @param in
+         */
+        private static void solution1(Scanner in){
+            int A = in.nextInt();
+    
+            int sum = 0;
+            int div,mod;
+            for(int i=2; i<A; i++){
+                div = A;
+                while(div > 0){
+                    mod = div%i;
+                    div = div/i;
+                    sum += mod;
+                }
+            }
+    
+            int dividend = sum;
+            int divisor = A-2;
+            int gcd = gcd(dividend, divisor);
+    
+            System.out.println(dividend/gcd+"/"+divisor/gcd);
+        }
+    
+        /**
+         * 最大公约数
+         * @param a
+         * @param b
+         * @return
+         */
+        private static int gcd(int a, int b){
+            return b>0 ? gcd(b, a%b) : a;
+        }
+    
+        /**
+         * 模拟法
+         * @param in
+         */
+        private static void solution2(Scanner in){
+            int A = in.nextInt();
+    
+            int sum = 0;
+            int div,mod;
+            for(int i=2; i<A; i++){
+                div = A;
+                while(div > 0){
+                    mod = div%i;
+                    div = div/i;
+                    sum += mod;
+                }
+            }
+    
+            int dividend = sum;
+            int divisor = A-2;
+            for(int i=2; i<=divisor; i++){
+                while(dividend%i==0 && divisor%i==0){
+                    dividend /= i;
+                    divisor /= i;
+                }
+            }
+    
+            System.out.println(dividend+"/"+divisor);
+        }
+    }
+
+  
+

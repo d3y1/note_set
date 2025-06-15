@@ -1,0 +1,222 @@
+# java-NC378 两数最大异或值
+
+
+    import java.util.*;
+    
+    /**
+     * NC378 两数最大异或值
+     * @author d3y1
+     */
+    public class Solution {
+        // 最高数位为30(0-30) -> 31位+1位符号位=32位
+        private final int HIGH_BIT = 30;
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 相似 -> ZJ26 异或 [nowcoder]
+         *
+         * @param array int整型一维数组
+         * @return int整型
+         */
+        public int maxXOR (ArrayList<Integer> array) {
+            // return solution1(array);
+            // return solution11(array);
+            return solution2(array);
+            // return solution3(array);
+            // return solution33(array);
+        }
+    
+        /**
+         * 位运算: 异或
+         *
+         * 双重循环遍历
+         *
+         * @param array
+         * @return
+         */
+        private int solution1(ArrayList<Integer> array){
+            int n = array.size();
+            int max = 0;
+            int xor;
+            for(int i=0; i<n; i++){
+                for(int j=i+1; j<n; j++){
+                    xor = array.get(i)^array.get(j);
+                    max = Math.max(max, xor);
+                }
+            }
+    
+            return max;
+        }
+    
+        /**
+         * 位运算: 异或
+         *
+         * 双重循环遍历(哈希优化)
+         *
+         * @param array
+         * @return
+         */
+        private int solution11(ArrayList<Integer> array){
+            HashSet<Integer> set = new HashSet<>();
+            for(int val: array){
+                set.add(val);
+            }
+    
+            ArrayList<Integer> distinct = new ArrayList<>(set);
+            int size = distinct.size();
+            int max = 0;
+            int xor;
+            for(int i=0; i<size; i++){
+                for(int j=i+1; j<size; j++){
+                    xor = array.get(i)^array.get(j);
+                    max = Math.max(max, xor);
+                }
+            }
+    
+            return max;
+        }
+    
+        /**
+         * 位运算 + 哈希
+         *
+         * pre_k() 表示从最高位(第30位)开始的前k位
+         * a_i a_j 表示某两个选择的数
+         * xor     表示最终异或结果(从高位到低位,依次确定,优先置1)
+         * 
+         * pre_k(xor) = pre_k(a_i) ^ pre_k(a_j)
+         * => pre_k(a_j) = pre_k(xor) ^ pre_k(a_i)
+         *
+         * xor当前数位优先置1, pre_k(xor)为已知
+         * 因此我们先将所有的pre_k(a_j)加入哈希表existed中, 再枚举校验是否存在某个数a_i, 使得pre_k(xor)^pre_k(a_i)恰好出现在existed中.
+         *
+         * 如果可以找到上面的a_i, 则当前数位可以为1, 否则当前数位只能为0.
+         *
+         * @param array
+         * @return
+         */
+        private int solution2(ArrayList<Integer> array){
+            int xor = 0;
+            HashSet<Integer> existed = new HashSet<>();
+            // 从高位到低位 依次确定
+            for(int i=HIGH_BIT; i>=0; i--){
+                existed.clear();
+                for(int val: array){
+                    // pre_k(a_j) val前k位 k=HIGH_BIT-i+1
+                    existed.add(val>>i);
+                }
+    
+                // 当前数位优先置1, 此处xor即pre_k(xor) k=HIGH_BIT-i+1
+                // xor = xor*2+1;
+                xor = (xor<<1)+1;
+                boolean found = false;
+                for(int val: array){
+                    // 表示当前数位可以为1 <- 校验pre_k(xor)^pre_k(a_i)
+                    if(existed.contains(xor^(val>>i))){
+                        found = true;
+                        break;
+                    }
+                }
+    
+                // 未找到 -> 表示当前数位不可为1, 减1置0
+                if(!found){
+                    xor = xor-1;
+                }
+            }
+    
+            return xor;
+        }
+    
+        /**
+         * 字典树
+         * @param array
+         * @return
+         */
+        private int solution3(ArrayList<Integer> array){
+            Trie trie = new Trie();
+            HashSet<Integer> set = new HashSet<>();
+            for(int val: array){
+                if(!set.contains(val)){
+                    set.add(val);
+                    trie.insert(val);
+                }
+            }
+    
+            int max = 0;
+            int xor;
+            for(int val: set){
+                xor = trie.query(val);
+                max = Math.max(max, xor);
+            }
+    
+            return max;
+        }
+    
+        /**
+         * 字典树: 优化
+         * @param array
+         * @return
+         */
+        private int solution33(ArrayList<Integer> array){
+            Trie trie = new Trie();
+            HashSet<Integer> set = new HashSet<>();
+            int max = 0;
+            int xor;
+            for(int val: array){
+                if(!set.contains(val)){
+                    set.add(val);
+                    trie.insert(val);
+                    xor = trie.query(val);
+                    max = Math.max(max, xor);
+                }
+            }
+    
+            return max;
+        }
+    
+        /**
+         * 字典树 Trie
+         */
+        private class Trie {
+            Trie[] child = new Trie[2];
+    
+            /**
+             * 新增
+             * @param val
+             */
+            private void insert(int val){
+                Trie curr = this;
+                for(int j=HIGH_BIT; j>=0; j--){
+                    int bit = (val>>j)&1;
+                    if(curr.child[bit] == null){
+                        curr.child[bit] = new Trie();
+                    }
+                    curr = curr.child[bit];
+                }
+            }
+    
+            /**
+             * 查询: 获取当前数val的最大异或值
+             * @param val
+             * @return
+             */
+            private int query(int val){
+                Trie curr = this;
+                int xor = 0;
+                for(int j=HIGH_BIT; j>=0; j--){
+                    int bit = (val>>j)&1;
+                    if(curr.child[bit^1] != null){
+                        xor |= (1<<j);
+                        curr = curr.child[bit^1];
+                    }else{
+                        curr = curr.child[bit];
+                    }
+                }
+    
+                return xor;
+            }
+        }
+    }
+
+  
+

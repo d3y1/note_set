@@ -1,0 +1,180 @@
+# java-NC204 二叉树的最大宽度
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC204 二叉树的最大宽度
+     * @author d3y1
+     */
+    public class Solution {
+        private int result = 0;
+        // level(key) -> leftest_idx(value)
+        private HashMap<Integer, Integer> leftMap = new HashMap<>();
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 程序入口
+         *
+         * @param root TreeNode类
+         * @return int整型
+         */
+        public int widthOfBinaryTree (TreeNode root) {
+            return solution1(root);
+            // return solution2(root);
+            // return solution3(root);
+        }
+    
+        /**
+         * dfs
+         * @param root
+         * @return
+         */
+        private int solution1(TreeNode root){
+            preOrder(root, 1, 1);
+    
+            return result;
+        }
+    
+        /**
+         * 递归: 前序遍历
+         * @param root
+         * @param level
+         * @param idx
+         */
+        private void preOrder(TreeNode root, int level, int idx){
+            if(root == null){
+                return;
+            }
+    
+            // key(level)存在-直接取值 key(level)不存在-先put,再取值
+            Integer leftIdx = leftMap.computeIfAbsent(level, value->idx);
+            result = Math.max(result, idx-leftIdx+1);
+    
+            preOrder(root.left, level+1, 2*idx);
+            preOrder(root.right, level+1, 2*idx+1);
+        }
+    
+        /**
+         * bfs
+         * @param root
+         * @return
+         */
+        private int solution2(TreeNode root){
+            levelOrderQueue(root, 1, 1);
+    
+            return result;
+        }
+    
+        /**
+         * 层序遍历: Queue
+         * @param root
+         * @param level
+         * @param idx
+         */
+        private void levelOrderQueue(TreeNode root, int level, int idx){
+            if(root == null){
+                return;
+            }
+    
+            Queue<QueueNode> queue = new LinkedList<>();
+            queue.offer(new QueueNode(root, level, idx));
+            int leftIdx = idx;
+            int lastLevel = level;
+            int currLevel,currIdx;
+            QueueNode queueNode;
+            while(!queue.isEmpty()){
+                queueNode = queue.poll();
+                currLevel = queueNode.level;
+                currIdx = queueNode.idx;
+                if(queueNode.node != null){
+                    queue.offer(new QueueNode(queueNode.node.left, currLevel+1, 2*currIdx));
+                    queue.offer(new QueueNode(queueNode.node.right, currLevel+1, 2*currIdx+1));
+                    // 新层首个非空节点
+                    if(currLevel != lastLevel){
+                        lastLevel = currLevel;
+                        leftIdx = currIdx;
+                    }
+                    result = Math.max(result, currIdx-leftIdx+1);
+                }
+            }
+        }
+    
+        /**
+         * bfs
+         * @param root
+         * @return
+         */
+        private int solution3(TreeNode root){
+            levelOrderDeque(root);
+    
+            return result;
+        }
+    
+        /**
+         * 层序遍历: Deque
+         * @param root
+         */
+        private void levelOrderDeque(TreeNode root){
+            if(root == null){
+                return;
+            }
+    
+            Deque<TreeNode> deque = new LinkedList<>();
+            deque.offer(root);
+            TreeNode node;
+            while(!deque.isEmpty()){
+                // 去掉该层左边空节点
+                while(!deque.isEmpty() && deque.peekFirst()==null){
+                    deque.pollFirst();
+                }
+                // 去掉该层右边空节点
+                while(!deque.isEmpty() && deque.peekLast()==null){
+                    deque.pollLast();
+                }
+    
+                // 节点个数即为宽度
+                int size = deque.size();
+                result = Math.max(result, size);
+    
+                // 生成下一层
+                for(int i=1; i<=size; i++){
+                    node = deque.poll();
+                    if(node != null){
+                        deque.offerLast(node.left);
+                        deque.offerLast(node.right);
+                    }else{
+                        deque.offerLast(null);
+                        deque.offerLast(null);
+                    }
+                }
+            }
+        }
+    
+        private class QueueNode {
+            TreeNode node;
+            int level;
+            int idx;
+    
+            public QueueNode(TreeNode node, int level, int idx){
+                this.node = node;
+                this.level = level;
+                this.idx = idx;
+            }
+        }
+    }
+
+  
+

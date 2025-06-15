@@ -1,0 +1,114 @@
+# java-HJ89 24点运算
+
+
+    import java.util.HashMap;
+    import java.util.Scanner;
+    
+    public class Main {
+        private static final HashMap<String, Integer> cardMap = new HashMap<String, Integer>(){{
+            put("A", 1);
+            put("2", 2);
+            put("3", 3);
+            put("4", 4);
+            put("5", 5);
+            put("6", 6);
+            put("7", 7);
+            put("8", 8);
+            put("9", 9);
+            put("10", 10);
+            put("J", 11);
+            put("Q", 12);
+            put("K", 13);
+        }};
+    
+        private static String[] cards = new String[4];
+        private static boolean[] isVisited = new boolean[4];
+        private static final char[] ops = new char[]{'+', '-', '*', '/'};
+    
+        private static boolean isComplete = false;
+        private static String op24Str = "";
+    
+    
+        public static void main(String[] args){
+            Scanner in =  new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution(in);
+            }
+        }
+    
+        /**
+         * 模拟法
+         * @param in
+         */
+        private static void solution(Scanner in){
+            String line = in.nextLine();
+    
+            if(line.contains("joker") || line.contains("JOKER")){
+                System.out.println("ERROR");
+            }else{
+                cards = line.split(" ");
+    
+                operate(0, 0, "");
+    
+                if(isComplete){
+                    System.out.println(op24Str);
+                }else{
+                    System.out.println("NONE");
+                }
+            }
+        }
+    
+        /**
+         * 递归
+         * @param opTimes
+         * @param result
+         * @param opStr
+         */
+        private static void operate(int opTimes, int result, String opStr){
+            if(opTimes == 4){
+                if(result == 24){
+                    isComplete = true;
+                    op24Str = opStr;
+                }
+                return;
+            }
+    
+            // cards[i] - 4张卡牌
+            for(int i=0; i<4; i++){
+                if(isComplete){
+                    break;
+                }
+                // 卡牌是否已经使用
+                if(!isVisited[i]){
+                    isVisited[i] = true;
+    
+                    if(opTimes == 0){
+                        int newResult = cardMap.get(cards[i]);
+                        String newOpStr = cards[i];
+    
+                        operate(opTimes+1, newResult, newOpStr);
+                    }else{
+                        // ops[j] - 加减乘除
+                        for(int j=0; j<4; j++){
+                            int newResult = 0;
+                            switch(ops[j]){
+                                case '+': newResult = result + cardMap.get(cards[i]); break;
+                                case '-': newResult = result - cardMap.get(cards[i]); break;
+                                case '*': newResult = result * cardMap.get(cards[i]); break;
+                                case '/': newResult = result / cardMap.get(cards[i]); break;
+                            }
+                            String newOpStr = opStr + ops[j] + cards[i];
+    
+                            operate(opTimes+1, newResult, newOpStr);
+                        }
+                    }
+    
+                    isVisited[i] = false;
+                }
+            }
+        }
+    }
+
+  
+

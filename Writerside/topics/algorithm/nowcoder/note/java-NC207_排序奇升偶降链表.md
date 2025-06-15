@@ -1,0 +1,84 @@
+# java-NC207 排序奇升偶降链表
+
+
+    import java.util.*;
+    
+    /*
+     * public class ListNode {
+     *   int val;
+     *   ListNode next = null;
+     *   public ListNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC207 排序奇升偶降链表
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 头插法 + 尾插法 + 递归合并
+         *
+         * @param head ListNode类
+         * @return ListNode类
+         */
+        public ListNode sortLinkedList (ListNode head) {
+            ListNode oddHead = new ListNode(-1);
+            ListNode evenHead = new ListNode(-1);
+    
+            ListNode odd,even,oddTail;
+            oddTail = oddHead;
+            odd = head;
+            while(odd != null){
+                even = odd.next;
+                // 尾插法 <- 已经升序
+                odd.next = null;
+                oddTail.next = odd;
+                oddTail = odd;
+    
+                if(even == null){
+                    break;
+                }
+    
+                odd = even.next;
+                // 头插法 <- 转成升序
+                even.next = evenHead.next;
+                evenHead.next = even;
+            }
+    
+            return merge(oddHead.next, evenHead.next);
+        }
+        
+        /**
+         * 合并
+         *
+         * 合并两个升序链表(奇偶)
+         *
+         * @param odd
+         * @param even
+         * @return
+         */
+        private ListNode merge(ListNode odd, ListNode even){
+            if(odd == null){
+                return even;
+            }
+            if(even == null){
+                return odd;
+            }
+    
+            if(odd.val < even.val){
+                odd.next = merge(odd.next, even);
+                return odd;
+            }else{
+                even.next = merge(odd, even.next);
+                return even;
+            }
+        }
+    }
+
+  
+

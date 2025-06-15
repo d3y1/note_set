@@ -1,0 +1,58 @@
+# java-NC290 礼物的最大价值
+
+
+    import java.util.*;
+    
+    /**
+     * NC290 礼物的最大价值
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param grid int整型二维数组
+         * @return int整型
+         */
+        public int maxValue (int[][] grid) {
+            return solution(grid);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[i][j]表示到达棋盘第i行第j列时所能得到的最大价值
+         * 
+         *            { dp[i][j-1] + grid[i-1][j-1]                        , i=1
+         * dp[i][j] = { dp[i-1][j] + grid[i-1][j-1]                        , j=1
+         *            { Math.max(dp[i][j-1], dp[i-1][j]) + grid[i-1][j-1]  , i>1 & j>1
+         *
+         * @param grid
+         * @return
+         */
+        private int solution(int[][] grid){
+            int m = grid.length;
+            int n = grid[0].length;
+    
+            int[][] dp = new int[m+1][n+1];
+            for(int i=1; i<=m; i++){
+                for(int j=1; j<=n; j++){
+                    if(i == 1){
+                        dp[i][j] = dp[i][j-1] + grid[i-1][j-1];
+                        continue;
+                    }
+                    if(j == 1){
+                        dp[i][j] = dp[i-1][j] + grid[i-1][j-1];
+                        continue;
+                    }
+                    dp[i][j] = Math.max(dp[i][j-1], dp[i-1][j]) + grid[i-1][j-1];
+                }
+            }
+    
+            return dp[m][n];
+        }
+    }
+
+  
+

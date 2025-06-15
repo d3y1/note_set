@@ -1,0 +1,43 @@
+# java-MT40 关灯游戏
+
+
+    import java.util.Scanner;
+    
+    public class Main {
+        public static void main(String[] args){
+            Scanner in = new Scanner(System.in);
+    
+            while(in.hasNext()){
+                solution(in);
+            }
+        }
+    
+        /**
+         * 模拟法
+         * 
+         * 思路:
+         * 在他们都足够聪明的情况下, 最后谁会赢 -> 即是求最少操作次数, 再判断奇偶
+         * 
+         * 前面的连续的0都不用管
+         * 从左往右, 从第一个1开始, 后面连续的0或者1看成一个整体
+         * 举例分析可知:
+         * 最后是0, 说明需要操作偶数次灯才能全灭, 那么就是Bob嬴;
+         * 最后是1, 说明需要操作奇数次灯才能全灭, 那么就是Alice嬴。
+         *
+         * @param in
+         */
+        private static void solution(Scanner in){
+            int n = in.nextInt();
+            in.nextLine();
+            String states = in.nextLine().replaceAll(" ", "");
+    
+            if(states.endsWith("1")){
+                System.out.println("Alice");
+            }else{
+                System.out.println("Bob");
+            }
+        }
+    }
+
+  
+

@@ -1,0 +1,166 @@
+# java-HJ20 密码验证合格程序
+
+
+    import java.util.HashSet;
+    import java.util.Scanner;
+    import java.util.regex.Pattern;
+    
+    /**
+     * HJ20 密码验证合格程序
+     * @author d3y1
+     */
+    public class Main {
+        // 长度
+        private static final int LEN = 8;
+        // 种类
+        private static final int K = 3;
+        // 窗口大小
+        private static final int W = 3;
+    
+        public static void main(String[] args) {
+            // solution1();
+            solution2();
+        }
+    
+        /**
+         * 字符串 + 哈希
+         */
+        private static void solution1(){
+            Scanner in = new Scanner(System.in);
+            while (in.hasNextLine()) {
+                String password = in.nextLine();
+                int n = password.length();
+    
+                // 空格
+                if(password.contains(" ")){
+                    System.out.println("NG");
+                    continue;
+                }
+                
+                // 长度
+                if(n <= LEN){
+                    System.out.println("NG");
+                    continue;
+                }
+    
+                // 种类
+                HashSet<String> kindSet = new HashSet<>();
+                for(char ch: password.toCharArray()){
+                    if(Character.isUpperCase(ch)){
+                        kindSet.add("upper");
+                    }
+                    else if(Character.isLowerCase(ch)){
+                        kindSet.add("lower");
+                    }
+                    else if(Character.isDigit(ch)){
+                        kindSet.add("digit");
+                    }
+                    else{
+                        kindSet.add("other");
+                    }
+                }
+                if(kindSet.size() < K){
+                    System.out.println("NG");
+                    continue;
+                }
+    
+                // 重复
+                String sub;
+                boolean isDuplicated = false;
+                for(int i=0; i+W<n; i++){
+                    sub = password.substring(i, i+W);
+                    if(password.substring(i+W).contains(sub)){
+                        isDuplicated = true;
+                        break;
+                    }
+                }
+                if(isDuplicated){
+                    System.out.println("NG");
+                    continue;
+                }
+    
+                System.out.println("OK");
+            }
+        }
+    
+        /**
+         * 字符串 + 正则
+         */
+        private static void solution2(){
+            Scanner in = new Scanner(System.in);
+            while (in.hasNextLine()) {
+                String password = in.nextLine();
+                int n = password.length();
+    
+                // 空格
+                if(password.contains(" ")){
+                    System.out.println("NG");
+                    continue;
+                }
+                
+                // 长度
+                if(n <= LEN){
+                    System.out.println("NG");
+                    continue;
+                }
+                
+                // 种类
+                if(!isKindMatch(password)){
+                    System.out.println("NG");
+                    continue;
+                }
+                
+                // 重复
+                String sub;
+                boolean isDuplicated = false;
+                for(int i=0; i+W<n; i++){
+                    sub = password.substring(i, i+W);
+                    if(password.substring(i+W).contains(sub)){
+                        isDuplicated = true;
+                        break;
+                    }
+                }
+                if(isDuplicated){
+                    System.out.println("NG");
+                    continue;
+                }
+    
+                System.out.println("OK");
+            }
+        }
+    
+        /**
+         * 种类校验: 正则
+         * @param password
+         * @return
+         */
+        private static boolean isKindMatch(String password){
+            int kind = 0;
+    
+            Pattern p1 = Pattern.compile("[A-Z]");
+            if(p1.matcher(password).find()){
+                kind++;
+            }
+            Pattern p2 = Pattern.compile("[a-z]");
+            if(p2.matcher(password).find()){
+                kind++;
+            }
+            Pattern p3 = Pattern.compile("[0-9]");
+            if(p3.matcher(password).find()){
+                kind++;
+            }
+            Pattern p4 = Pattern.compile("[^A-Za-z0-9]");
+            if(p4.matcher(password).find()){
+                kind++;
+            }
+    
+            if(kind < K){
+                return false;
+            }
+    
+            return true;
+        }
+    }
+
+  
+

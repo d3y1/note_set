@@ -1,0 +1,65 @@
+# java-NC11 将升序数组转化为平衡二叉搜索树
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC11 将升序数组转化为平衡二叉搜索树
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 程序入口
+         *
+         * @param nums int整型一维数组
+         * @return TreeNode类
+         */
+        public TreeNode sortedArrayToBST (int[] nums) {
+            return solution(nums);
+        }
+    
+        /**
+         * dfs
+         * @param nums
+         * @return
+         */
+        private TreeNode solution(int[] nums){
+            return arrayToBST(nums, 0, nums.length-1);
+        }
+    
+        /**
+         * 递归
+         * @param nums
+         * @param left
+         * @param right
+         * @return
+         */
+        private TreeNode arrayToBST(int[] nums, int left, int right){
+            if(left > right){
+                return null;
+            }
+            int mid = (left+right)/2;
+    //        int mid = (left+right+1)/2;
+            TreeNode node = new TreeNode(nums[mid]);
+            node.left = arrayToBST(nums, left, mid-1);
+            node.right = arrayToBST(nums, mid+1, right);
+    
+            return node;
+        }
+    }
+
+  
+

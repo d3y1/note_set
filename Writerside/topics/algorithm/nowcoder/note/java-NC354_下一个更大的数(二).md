@@ -1,0 +1,190 @@
+# java-NC354 下一个更大的数(二)
+
+
+    import java.util.*;
+    import java.util.stream.Collectors;
+    
+    /**
+     * NC354 下一个更大的数(二)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型ArrayList
+         * @return int整型ArrayList
+         */
+        public ArrayList<Integer> nextBigger (ArrayList<Integer> nums) {
+            // return solution1(nums);
+            // return solution11(nums);
+            // return solution111(nums);
+            return solution1111(nums);
+            // return solution2(nums);
+            // return solution22(nums);
+        }
+    
+        /**
+         * 单调栈: 单调减(从右往左)
+         * @param nums
+         * @return
+         */
+        private ArrayList<Integer> solution1(ArrayList<Integer> nums){
+            int n = nums.size();
+            Stack<Integer> stack = new Stack<>();
+            ArrayList<Integer> list = new ArrayList<>(n);
+    
+            for(int i=n-1; i>=0; i--){
+                while(!stack.isEmpty() && stack.peek()<=nums.get(i)){
+                    stack.pop();
+                }
+                list.add(0, stack.isEmpty()?-1:stack.peek());
+                stack.push(nums.get(i));
+            }
+    
+            for(int i=n-1; i>=0; i--){
+                while(!stack.isEmpty() && stack.peek()<=nums.get(i)){
+                    stack.pop();
+                }
+                list.set(i, stack.isEmpty()?-1:stack.peek());
+                stack.push(nums.get(i));
+            }
+    
+            return list;
+        }
+    
+        /**
+         * 单调栈: 单调减(从右往左)
+         * @param nums
+         * @return
+         */
+        private ArrayList<Integer> solution11(ArrayList<Integer> nums){
+            int n = nums.size();
+            Stack<Integer> stack = new Stack<>();
+            int[] results = new int[n];
+    
+            for(int i=n-1; i>=0; i--){
+                while(!stack.isEmpty() && stack.peek()<=nums.get(i)){
+                    stack.pop();
+                }
+                results[i] = stack.isEmpty()?-1:stack.peek();
+                stack.push(nums.get(i));
+            }
+    
+            for(int i=n-1; i>=0; i--){
+                while(!stack.isEmpty() && stack.peek()<=nums.get(i)){
+                    stack.pop();
+                }
+                results[i] = stack.isEmpty()?-1:stack.peek();
+                stack.push(nums.get(i));
+            }
+    
+            ArrayList<Integer> list = Arrays.stream(results) // 创建IntStream
+                    .boxed() // 将IntStream转换为Stream<Integer>
+                    .collect(Collectors.toCollection(ArrayList::new));
+    
+            return list;
+        }
+    
+        /**
+         * 单调栈: 单调减(从右往左)
+         * @param nums
+         * @return
+         */
+        private ArrayList<Integer> solution111(ArrayList<Integer> nums){
+            int n = nums.size();
+            Stack<Integer> stack = new Stack<>();
+            int[] results = new int[n];
+    
+            for(int i=2*n-1; i>=0; i--){
+                // 单调栈 单调减(从右往左)
+                while(!stack.isEmpty() && stack.peek()<=nums.get(i%n)){
+                    stack.pop();
+                }
+                results[i%n] = stack.isEmpty()?-1:stack.peek();
+                stack.push(nums.get(i%n));
+            }
+    
+            ArrayList<Integer> list = Arrays.stream(results) // 创建IntStream
+                    .boxed() // 将IntStream转换为Stream<Integer>
+                    .collect(Collectors.toCollection(ArrayList::new));
+    
+            return list;
+        }
+    
+        /**
+         * 单调栈: 单调减(从右往左)
+         * @param nums
+         * @return
+         */
+        private ArrayList<Integer> solution1111(ArrayList<Integer> nums){
+            int n = nums.size();
+            Stack<Integer> stack = new Stack<>();
+            ArrayList<Integer> list = new ArrayList<>(n);
+            for(int i=0; i<n; i++){
+                list.add(-1);
+            }
+            for(int i=2*n-1; i>=0; i--){
+                // 单调栈 单调减(从右往左)
+                while(!stack.isEmpty() && stack.peek()<=nums.get(i%n)){
+                    stack.pop();
+                }
+                list.set(i%n, stack.isEmpty()?-1:stack.peek());
+                stack.push(nums.get(i%n));
+            }
+    
+            return list;
+        }
+    
+        /**
+         * 单调栈: 单调减(从左往右)
+         * @param nums
+         * @return
+         */
+        private ArrayList<Integer> solution2(ArrayList<Integer> nums){
+            int n = nums.size();
+            Stack<Integer> stack = new Stack<>();
+            ArrayList<Integer> list = new ArrayList<>(n);
+            for(int i=0; i<n; i++){
+                list.add(-1);
+            }
+            for(int i=0; i<n*2; i++){
+                // 单调栈 单调减(从左往右)
+                while(!stack.isEmpty() && nums.get(stack.peek())<nums.get(i%n)){
+                    list.set(stack.pop(), nums.get(i%n));
+                }
+                stack.push(i%n);
+            }
+    
+            return list;
+        }
+    
+        /**
+         * 单调栈: 单调减(从左往右)
+         * @param nums
+         * @return
+         */
+        private ArrayList<Integer> solution22(ArrayList<Integer> nums){
+            int n = nums.size();
+            Stack<Integer> stack = new Stack<>();
+            int[] results = new int[n];
+            Arrays.fill(results, -1);
+            for(int i=0; i<n*2; i++){
+                // 单调栈 单调减(从左往右)
+                while(!stack.isEmpty() && nums.get(stack.peek())<nums.get(i%n)){
+                    results[stack.pop()] = nums.get(i%n);
+                }
+                stack.push(i%n);
+            }
+    
+            ArrayList<Integer> list = Arrays.stream(results) // 创建IntStream
+                    .boxed() // 将IntStream转换为Stream<Integer>
+                    .collect(Collectors.toCollection(ArrayList::new));
+    
+            return list;
+        }
+    }
+
+  
+

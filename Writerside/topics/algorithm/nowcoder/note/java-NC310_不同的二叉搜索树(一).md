@@ -1,0 +1,169 @@
+# java-NC310 不同的二叉搜索树(一)
+
+
+    import java.math.BigInteger;
+    import java.util.*;
+    
+    /**
+     * NC310 不同的二叉搜索树(一)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param n int整型
+         * @return int整型
+         */
+        public int BSTCount (int n) {
+            return solution1(n);
+            // return solution2(n);
+            // return solution3(n);
+            // return (int) solution4(n);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * 画图举例子找规律:
+         *
+         * dp[i][j]表示总节点数为i且以节点j为根节点时构成互不相同二叉搜索树的方法数
+         * C[i]表示总节点数为i时构成互不相同二叉搜索树的方法数
+         *
+         * // 固定根节点j 左子树还有j-1个节点(方法数为C[j-1]) 右子树还有i-j个节点(方法数为C[i-j])
+         * dp[i][j] = C[j-1] * C[i-j]
+         * // 分别以各个节点为根节点
+         * C[i] = dp[i][1] + dp[i][2] + ... + dp[i][i-1] + dp[i][i]  , 2<=i<=n && 1<=j<=i
+         *      = C[1-1] * C[i-1] + C[2-1] * C[i-2] + ... + C[(i-1)-1] * C[i-(i-1)] + C[i-1] * C[i-i]
+         *      = C[0] * C[i-1] + C[1] * C[i-2] + ... + C[i-2] * C[1] + C[i-1] * C[0]
+         *
+         * @param n
+         * @return
+         */
+        private int solution1(int n){
+            int[] C = new int[n+1];
+            int[][] dp = new int[n+1][n+1];
+    
+            C[0] = 1;
+            C[1] = 1;
+            for(int i=2; i<=n; i++){
+                for(int j=1; j<=i; j++){
+                    dp[i][j] = C[j-1] * C[i-j];
+                    C[i] += dp[i][j];
+                }
+            }
+    
+            return C[n];
+        }
+    
+        /**
+         * 动态规划: 简化
+         *
+         * 画图举例子找规律:
+         *
+         * C[i]表示总节点数为i时构成互不相同二叉搜索树的方法数
+         * C[i] = C[0] * C[i-1] + C[1] * C[i-2] + ... + C[i-2] * C[1] + C[i-1] * C[0]  , 2<=i<=n && 1<=j<=i
+         *
+         * @param n
+         * @return
+         */
+        private int solution2(int n){
+            int[] C = new int[n+1];
+    
+            C[0] = 1;
+            C[1] = 1;
+            for(int i=2; i<=n; i++){
+                for(int j=1; j<=i; j++){
+                    C[i] +=  C[j-1] * C[i-j];
+                }
+            }
+    
+            return C[n];
+        }
+    
+        /**
+         * 数学法
+         *
+         * 画图举例子找规律:
+         *
+         * C[i]表示总节点数为i时构成互不相同二叉搜索树的方法数(C[0] = C[1] = 1)
+         * C[i] = C[0] * C[i-1] + C[1] * C[i-2] + ... + C[i-2] * C[1] + C[i-1] * C[0]  , 2<=i<=n && 1<=j<=i
+         *
+         * 可见:
+         * C[0] = 1
+         * C[1] = 1
+         * C[2] = 2
+         * C[3] = 5
+         * C[4] = 14
+         * C[5] = 42
+         * C[6] = 132
+         * ...
+         *
+         * 以上为卡塔兰数
+         * C[n] = C(n) = (2n)! / ((n+1)!n!)
+         *
+         * @param n
+         * @return
+         */
+        private int solution3(int n){
+            return C(n).intValue();
+        }
+    
+        /**
+         * C(n)
+         * @param n
+         * @return
+         */
+        private BigInteger C(int n){
+            BigInteger up = new BigInteger("1");
+            BigInteger down = new BigInteger("1");
+    
+            for(int i=1; i<=n; i++){
+                if(i < n){
+                    up = up.multiply(BigInteger.valueOf(n+1+i));
+                }
+                down = down.multiply(BigInteger.valueOf(i));
+            }
+    
+            return up.divide(down);
+        }
+    
+        /**
+         * 数学法
+         *
+         * 画图举例子找规律:
+         *
+         * C[i]表示总节点数为i时构成互不相同二叉搜索树的方法数(C[0] = C[1] = 1)
+         * C[i] = C[0] * C[i-1] + C[1] * C[i-2] + ... + C[i-2] * C[1] + C[i-1] * C[0]  , 2<=i<=n && 1<=j<=i
+         *
+         * 可见:
+         * C[0] = 1
+         * C[1] = 1
+         * C[2] = 2
+         * C[3] = 5
+         * C[4] = 14
+         * C[5] = 42
+         * C[6] = 132
+         * ...
+         *
+         * 以上为卡塔兰数
+         * C[n] = C(n) = C(n-1)*(4n-2)/(n+1)
+         *
+         * @param n
+         * @return
+         */
+        private long solution4(int n){
+            long[] C = new long[n+1];
+    
+            C[0] = 1L;
+            for(int i=1; i<=n; i++){
+                C[i] = C[i-1]*(4*i-2)/(i+1);
+            }
+    
+            return C[n];
+        }
+    }
+
+  
+

@@ -1,0 +1,157 @@
+# java-NC386 子数组的最小值之和
+
+
+    import java.util.*;
+    import java.util.stream.IntStream;
+    
+    /**
+     * NC386 子数组的最小值之和
+     * @author d3y1
+     */
+    public class Solution {
+        private final int MOD = 1000000007;
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组
+         * @return int整型
+         */
+        public int sumSubarr (ArrayList<Integer> nums) {
+            int[] iNums = nums.stream().mapToInt(Integer::intValue).toArray();
+            // int[] iNums = nums.stream().mapToInt(i->i).toArray();
+            // return solution1(iNums);
+            return solution2(iNums);
+        }
+    
+        /**
+         * 动态规划 + 单调栈
+         *
+         * 举例子找规律:
+         * nums数组
+         * 0  1  2  3  4  5  6  7  8  9  10
+         * 23 43 18 16 35 23 6  11 6  33 30
+         *
+         * leftMap(i)  表示当前元素nums[i]左边第一个小于当前元素的元素索引 -1:表示没找到(当前元素左边都比当前元素大)
+         * rightMap(i) 表示当前元素nums[i]右边第一个小于当前元素的元素索引  N:表示没找到(当前元素右边都比当前元素大)
+         *      i       0  1  2  3  4  5  6  7  8  9  10
+         * leftMap(i)  -1  0 -1 -1  3  3 -1  6 -1  8  8
+         * rightMap(i)  2  2  3  6  5  6  11 8  11 10 11
+         *
+         * dp[i]表示以元素nums[i]为开头的所有连续子数组的最小值的和
+         *    i    0  1  2  3  4  5  6  7  8  9  10
+         * dp[0]   23 23 18 16 16 16 6  6  6  6  6
+         * dp[1]      43 18 16 16 16 6  6  6  6  6
+         * dp[2]         18 16 16 16 6  6  6  6  6
+         * dp[3]            16 16 16 6  6  6  6  6
+         * dp[4]               35 23 6  6  6  6  6
+         * dp[5]                  23 6  6  6  6  6
+         * dp[6]                     6  6  6  6  6
+         * dp[7]                        11 6  6  6
+         * dp[8]                           6  6  6
+         * dp[9]                              33 30
+         * dp[10]                                30
+         *
+         * dp[i] = nums[i]*(rightMap.get(i)-i)+dp[rightMap.get(i)]
+         * 
+         * @param nums
+         * @return
+         */
+        private int solution1(int[] nums){
+            int N = nums.length;
+    
+            Map<Integer, Integer> rightMap = new HashMap<>();
+            Stack<Integer> rightStack = new Stack<>();
+            int num;
+            // 右边 降序
+            for (int i=N-1; i>=0; i--){
+                // 找到当前元素右边第一个小于当前元素的元素索引 N:表示没找到, 当前元素右边都比当前元素大
+                num = nums[i];
+                // 单调增
+                while (!rightStack.isEmpty() && num<=nums[rightStack.peek()]){
+                    rightStack.pop();
+                }
+                rightMap.put(i, rightStack.isEmpty() ? N : rightStack.peek());
+                rightStack.push(i);
+            }
+    
+            int sum = 0;
+            int[] dp = new int[N+1];
+            for(int i=N-1; i>=0; i--){
+                dp[i] = nums[i]*(rightMap.get(i)-i)+dp[rightMap.get(i)];
+                sum = (sum+dp[i]) % MOD;
+            }
+            
+            return sum;
+        }
+    
+        /**
+         * 动态规划 + 单调栈
+         *
+         * 举例子找规律:
+         * nums数组
+         * 0  1  2  3  4  5  6  7  8  9  10
+         * 23 43 18 16 35 23 6  11 6  33 30
+         *
+         * leftMap(i)  表示当前元素nums[i]左边第一个小于当前元素的元素索引 -1:表示没找到(当前元素左边都比当前元素大)
+         * rightMap(i) 表示当前元素nums[i]右边第一个小于当前元素的元素索引  N:表示没找到(当前元素右边都比当前元素大)
+         *      i       0  1  2  3  4  5  6  7  8  9  10
+         * leftMap(i)  -1  0 -1 -1  3  3 -1  6 -1  8  8
+         * rightMap(i)  2  2  3  6  5  6  11 8  11 10 11
+         *
+         * dp[i]表示以元素nums[i]为结尾的所有连续子数组的最小值的和
+         *    i    0  1  2  3  4  5  6  7  8  9  10
+         * dp[0]   23
+         * dp[1]   23 43
+         * dp[2]   18 18 18
+         * dp[3]   16 16 16 16
+         * dp[4]   16 16 16 16 35
+         * dp[5]   16 16 16 16 23 23
+         * dp[6]   6  6  6  6  6  6  6
+         * dp[7]   6  6  6  6  6  6  6  11
+         * dp[8]   6  6  6  6  6  6  6   6  6
+         * dp[9]   6  6  6  6  6  6  6   6  6 33
+         * dp[10]  6  6  6  6  6  6  6   6  6 30 30
+         *     
+         *         { nums[i]*(i-leftMap.get(i))                       , leftMap.get(i) == -1
+         * dp[i] = {
+         *         { nums[i]*(i-leftMap.get(i)) + dp[leftMap.get(i)]  , leftMap.get(i) != -1
+         *
+         * @param nums
+         * @return
+         */
+        private int solution2(int[] nums){
+            int N = nums.length;
+    
+            Map<Integer, Integer> leftMap = new HashMap<Integer, Integer>();
+            Stack<Integer> leftStack = new Stack<>();
+            int num;
+            // 左边 升序
+            for (int i=0; i<N; i++){
+                // 找到当前元素左边第一个小于当前元素的元素索引 -1:表示没找到, 当前元素左边都比当前元素大
+                num = nums[i];
+                // 单调增
+                while (!leftStack.isEmpty() && num<=nums[leftStack.peek()]){
+                    leftStack.pop();
+                }
+                leftMap.put(i, leftStack.isEmpty() ? -1 : leftStack.peek());
+                leftStack.push(i);
+            }
+    
+            int sum = 0;
+            int[] dp = new int[N];
+            for(int i=0; i<N; i++){
+                dp[i] = nums[i]*(i-leftMap.get(i));
+                if(leftMap.get(i) != -1){
+                    dp[i] += dp[leftMap.get(i)];
+                }
+                sum = (sum+dp[i]) % MOD;
+            }
+            
+            return sum;
+        }
+    }
+
+  
+

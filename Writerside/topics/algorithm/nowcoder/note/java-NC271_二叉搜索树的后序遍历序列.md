@@ -1,0 +1,94 @@
+# java-NC271 二叉搜索树的后序遍历序列
+
+
+    import java.util.*;
+    
+    /**
+     * NC271 二叉搜索树的后序遍历序列
+     * @author d3y1
+     */
+    public class Solution {
+        public boolean VerifySquenceOfBST(int[] sequence) {
+            // return solution1(sequence);
+            return solution2(sequence);
+        }
+    
+        /**
+         * 递归
+         * @param sequence
+         * @return
+         */
+        private boolean solution1(int[] sequence){
+            int n = sequence.length;
+            if(n == 0){
+                return false;
+            }
+    
+            return verify(sequence, 0, n-1);
+        }
+    
+        /**
+         * 分治
+         * @param sequence
+         * @param left
+         * @param right
+         * @return
+         */
+        private boolean verify(int[] sequence, int left, int right){
+            if(left >= right){
+                return true;
+            }
+    
+            // 划分 左右子树
+            int loc = left;
+            // 根节点值
+            int root = sequence[right];
+            // 找出划分位置
+            for(int i=left; i<=right; i++){
+                if(sequence[i] >= root){
+                    loc = i;
+                    break;
+                }
+            }
+    
+            // 校验右子树: 是否存在小于等于根节点的节点
+            for(int i=loc; i<right; i++){
+                if(sequence[i] <= root){
+                    return false;
+                }
+            }
+    
+            return verify(sequence, left, loc-1) && verify(sequence, loc, right-1);
+        }
+    
+        /**
+         * 迭代: 单调栈
+         * @param sequence
+         * @return
+         */
+        private boolean solution2(int[] sequence){
+            int n = sequence.length;
+            if(n == 0){
+                return false;
+            }
+    
+            Stack<Integer> stack = new Stack<>();
+            int root = Integer.MAX_VALUE;
+    
+            for(int i=n-1; i>=0; i--){
+                if(sequence[i] > root){
+                    return false;
+                }
+                // 单调栈: 单调增
+                while(!stack.isEmpty() && stack.peek()>sequence[i]){
+                    root = stack.pop();
+                }
+                stack.add(sequence[i]);
+            }
+    
+            return true;
+        }
+    }
+
+  
+

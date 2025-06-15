@@ -1,0 +1,98 @@
+# java-NC388 砖墙的垂线
+
+
+    import java.util.*;
+    
+    /**
+     * NC388 砖墙的垂线
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 画砖墙图 -> 一目了然
+         *
+         * "如果你画的线只是从砖块边缘经过则不算是经过。" -> 尽量从边缘经过, 垂线才能最少经过砖块!
+         *
+         * @param wall int整型二维数组
+         * @return int整型
+         */
+        public int brickwall (ArrayList<ArrayList<Integer>> wall) {
+            // return solution1(wall);
+            return solution2(wall);
+        }
+    
+        /**
+         * 哈希: cnt[]
+         * @param wall
+         * @return
+         */
+        private int solution1(ArrayList<ArrayList<Integer>> wall){
+            // 砖墙行数
+            int n = wall.size();
+            // 砖墙最右边缘
+            int rightmost = 0;
+            for(int width: wall.get(0)){
+                rightmost += width;
+            }
+    
+            // 边缘统计
+            int[] cnt = new int[rightmost];
+            // 每行砖块
+            ArrayList<Integer> bricks;
+            // 砖块边缘
+            int edge;
+            // 相同砖块边缘统计 取最大值
+            int max = 0;
+            for(int i=0; i<n; i++){
+                bricks = wall.get(i);
+                edge = 0;
+                for(int width: bricks){
+                    edge += width;
+                    if(edge < rightmost){
+                        cnt[edge]++;
+                        max = Math.max(max, cnt[edge]);
+                    }
+                }
+            }
+    
+            // 砖墙行数-最大值
+            return n-max;
+        }
+    
+        /**
+         * 哈希: cntMap
+         * @param wall
+         * @return
+         */
+        private int solution2(ArrayList<ArrayList<Integer>> wall){
+            // 砖墙行数
+            int n = wall.size();
+            // 边缘统计
+            HashMap<Integer,Integer> cntMap = new HashMap<>();
+            // 每行砖块
+            ArrayList<Integer> bricks;
+            // 砖块边缘
+            int edge;
+            // 相同砖块边缘统计 取最大值
+            int max = 0;
+            for(int i=0; i<n; i++){
+                bricks = wall.get(i);
+                edge = 0;
+                // 减1 排除砖墙最右边缘rightmost
+                for(int j=0; j<bricks.size()-1; j++){
+                    // 当前砖块边缘(右)+砖块宽度
+                    edge += bricks.get(j);
+                    cntMap.put(edge, cntMap.getOrDefault(edge,0)+1);
+                    max = Math.max(max, cntMap.get(edge));
+                }
+            }
+    
+            // 砖墙行数-最大值
+            return n-max;
+        }
+    }
+
+  
+

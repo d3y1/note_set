@@ -1,0 +1,133 @@
+# java-NC153 信封嵌套问题
+
+
+    import java.util.*;
+    
+    /**
+     * NC153 信封嵌套问题
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 相同题目 => NC91 最长上升子序列(三)
+         * @param letters int整型二维数组
+         * @return int整型
+         */
+        public int maxLetters (int[][] letters) {
+            // return solution1(letters);
+            return solution2(letters);
+        }
+    
+        /**
+         * 动态规划: 等价于最长上升子序列(Longest Increasing Subsequence)LIS问题
+         *
+         * dp[i]表示从前面到以第i个信封结尾的最多嵌套层数(letters[i][1]必须被选取)
+         *
+         * dp[i] = Math.max(dp[i], dp[j]+1) , letters[j][1] < letters[i][1]
+         *
+         * @param letters
+         * @return
+         */
+        private int solution1(int[][] letters){
+            // 预处理 信封排序(长度升序 宽度降序)
+            // Arrays.sort(letters, (o1, o2)->(o1[0]==o2[0]?o2[1]-o1[1]:o1[0]-o2[0]));
+            // Arrays.sort(letters, (o1, o2) -> {
+            //     if(o1[0] == o2[0]){
+            //         return o2[1]-o1[1];
+            //     }else{
+            //         return o1[0]-o2[0];
+            //     }
+            // });
+            // 最快
+            Arrays.sort(letters, new Comparator<int[]>(){
+                @Override
+                public int compare(int[] o1, int[] o2){
+                    if(o1[0] == o2[0]){
+                        return o2[1]-o1[1];
+                    }else{
+                        return o1[0]-o2[0];
+                    }
+                }
+            });
+    
+            int len = letters.length;
+    
+            int[] dp = new int[len];
+            // 初始值
+            dp[0] = 1;
+            // 最长上升子序列的长度
+            int max = 1;
+            for(int i=1; i<len; i++){
+                dp[i] = 1;
+                for(int j=0; j<i; j++){
+                    if(letters[j][1] < letters[i][1]){
+                        dp[i] = Math.max(dp[i], dp[j]+1);
+                    }
+                }
+                max = Math.max(max, dp[i]);
+            }
+    
+            return max;
+        }
+    
+        /**
+         * 贪心 + 二分
+         * @param letters
+         * @return
+         */
+        private int solution2(int[][] letters){
+            // 预处理 信封排序(长度升序 宽度降序)
+            // Arrays.sort(letters, (o1, o2)->(o1[0]==o2[0]?o2[1]-o1[1]:o1[0]-o2[0]));
+            Arrays.sort(letters, new Comparator<int[]>(){
+                @Override
+                public int compare(int[] o1, int[] o2){
+                    if(o1[0] == o2[0]){
+                        return o2[1]-o1[1];
+                    }else{
+                        return o1[0]-o2[0];
+                    }
+                }
+            });
+    
+            int len = letters.length;
+    
+            // dp[i]表示从前面到以第i个信封结尾的最多嵌套层数(letters[i][1]必须被选取)
+            int[] dp = new int[len];
+            // 最长上升子序列 单调增
+            int[] seq = new int[len+1];
+            seq[1] = letters[0][1];
+            dp[0] = 1;
+            // 最长上升子序列的长度
+            int max = 1;
+    
+            for(int i=1; i<len; i++){
+                if(seq[max] < letters[i][1]){
+                    seq[++max] = letters[i][1];
+                    dp[i] = max;
+                }else{
+                    int left=0,right=max;
+                    // 上升子序列seq中二分查找最大的小于letters[i][1]的位置pos
+                    int pos = 0;
+                    while(left <= right){
+                        int mid = (left + right) >> 1;
+                        if(seq[mid] < letters[i][1]){
+                            pos = mid;
+                            left = mid + 1;
+                        }else{
+                            right = mid - 1;
+                        }
+                    }
+                    // 替换
+                    seq[pos+1] = letters[i][1];
+                    dp[i] = pos + 1;
+                }
+            }
+    
+            return max;
+        }
+    }
+
+  
+

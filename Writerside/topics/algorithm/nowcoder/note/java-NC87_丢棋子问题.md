@@ -1,0 +1,151 @@
+# java-NC87 丢棋子问题
+
+
+    import java.util.*;
+    
+    /**
+     * NC87 丢棋子问题
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 返回最差情况下扔棋子的最小次数
+         * @param n int整型 楼层数
+         * @param k int整型 棋子数
+         * @return int整型
+         */
+        public int solve (int n, int k) {
+            // return solution1(n, k);
+            return solution2(n, k);
+        }
+    
+        /**
+         * 动态规划: 二维数组
+         *
+         * dp[i][j]表示i个棋子扔j次能测的最多楼层数
+         *
+         * 考虑第i个棋子在最优的楼层扔下去, 会有两种情况:
+         * (1) 碎了, 那么上面就不用测了, 下面能测的楼层数是 dp[i-1][j-1]
+         * (2) 没碎, 那么下面就不用测了, 上面能测的楼层数是 dp[i][j-1]
+         * (3) 第i个棋子扔掉的那一层也能测
+         *
+         * 考虑最差的情形, 可以得到转移式:
+         * dp[i][j] = dp[i][j-1] + dp[i-1][j-1] + 1
+         *
+         * 棋子数i\次数j      0    1    2    3     4     5     6      7     8      9        10
+         *     1            0    1    2    3     4     5     6      7     8      9        10
+         *     2            0    1    3    6    10    15    21     28     36     45       55
+         *     3            0    1    3    7    14    25    41     63     92     129      175
+         *     4            0    1    3    7    15    30    56     98     162    255      385
+         *     5            0    1    3    7    15    31    62     119    218    381      637
+         * 从上到下 从左往右(按列)
+         * 
+         * @param n
+         * @param k
+         * @return
+         */
+        private int solution1(int n, int k){
+            if(n == 0){
+                return 0;
+            }
+            if(k == 1){
+                return n;
+            }
+    
+            // 对n楼层进行二分测试(最优) 需要测试次数log2(n)+1
+            int times = (int)(Math.log(n)/Math.log(2))+1;
+            // 如果棋子数k足够大, 二分的扔(二分测试)即可
+            if(k > times) {
+                return times;
+            }
+    
+            int[][] dp = new int[k+1][n+1];
+    
+            // 0个棋子
+            for(int i=0; i<=n; i++) {
+                dp[0][i] = 0;
+            }
+            // 扔0次
+            for(int i=0; i<=k; i++) {
+                dp[i][0] = 0;
+            }
+    
+            int j = 0;
+            while (dp[k][j] < n) {
+                j++;
+                for(int i = 1; i <= k; i++){
+                    dp[i][j] = dp[i][j-1] + dp[i-1][j-1] + 1;
+                }
+            }
+    
+            return j;
+        }
+    
+        /**
+         * 动态规划: 一维数组 (空间压缩)
+         *
+         * dp[i]表示i个棋子扔j次能测的最多楼层数
+         *
+         * 考虑第i个棋子在最优的楼层扔下去, 会有两种情况:
+         * (1) 碎了, 那么上面就不用测了, 下面能测的楼层数是 dp[i-1][j-1]
+         * (2) 没碎, 那么下面就不用测了, 上面能测的楼层数是 dp[i][j-1]
+         * (3) 第i个棋子扔掉的那一层也能测
+         *
+         * 考虑最差的情形, 可以得到转移式:
+         * dp[i][j] = dp[i][j-1] + dp[i-1][j-1] + 1
+         * 
+         * 空间压缩:
+         * dp[i] = dp[i] + dp_i_1 + 1
+         *
+         * 棋子数i\次数j      0    1    2    3     4     5     6      7     8      9        10
+         *     1            0    1    2    3     4     5     6      7     8      9        10
+         *     2            0    1    3    6    10    15    21     28     36     45       55
+         *     3            0    1    3    7    14    25    41     63     92     129      175
+         *     4            0    1    3    7    15    30    56     98     162    255      385
+         *     5            0    1    3    7    15    31    62     119    218    381      637
+         * 从上到下 从左往右(按列)
+         * 
+         * @param n
+         * @param k
+         * @return
+         */
+        private int solution2(int n, int k){
+            if(n == 0){
+                return 0;
+            }
+            if(k == 1){
+                return n;
+            }
+    
+            // 对n楼层进行二分测试(最优) 需要测试次数log2(n)+1
+            int times = (int)(Math.log(n)/Math.log(2))+1;
+            // 如果棋子数k足够大, 二分的扔(二分测试)即可
+            if(k > times) {
+                return times;
+            }
+    
+            int[] dp = new int[k+1];
+    
+            // 0个棋子
+            dp[0] = 0;
+    
+            int j = 0;
+            while (dp[k] < n) {
+                j++;
+                // dp[i-1][j-1]
+                int dp_i_1 = 0;
+                for(int i = 1; i <= k; i++){
+                    int tmp = dp[i];
+                    dp[i] = dp[i] + dp_i_1 + 1;
+                    dp_i_1 = tmp;
+                }
+            }
+    
+            return j;
+        }
+    }
+
+  
+

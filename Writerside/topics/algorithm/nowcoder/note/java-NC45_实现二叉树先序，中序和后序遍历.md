@@ -1,0 +1,224 @@
+# java-NC45 实现二叉树先序，中序和后序遍历
+
+
+    import java.util.*;
+    
+    /*
+     * public class TreeNode {
+     *   int val = 0;
+     *   TreeNode left = null;
+     *   TreeNode right = null;
+     *   public TreeNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC45 实现二叉树先序，中序和后序遍历
+     * @author d3y1
+     */
+    public class Solution {
+        private ArrayList<Integer> list = new ArrayList<>();
+    
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param root TreeNode类 the root of binary tree
+         * @return int整型二维数组
+         */
+        public int[][] threeOrders (TreeNode root) {
+            return solution1(root);
+            // return solution2(root);
+        }
+    
+        /**
+         * 递归法
+         * @param root
+         * @return
+         */
+        private int[][] solution1(TreeNode root){
+            run(root);
+    
+            int n = list.size()/3;
+            int[][] results = new int[3][n];
+            for(int i=0; i<3; i++){
+                for(int j=0; j<n; j++){
+                    results[i][j] = list.get(i*n+j);
+                }
+            }
+    
+            return results;
+        }
+    
+        /**
+         * 按序运行: 前序 -> 中序 -> 后序
+         * @param root
+         */
+        private void run(TreeNode root){
+            preOrder(root);
+            inOrder(root);
+            postOrder(root);
+        }
+    
+        /**
+         * 前序遍历
+         * @param root
+         */
+        private void preOrder(TreeNode root){
+            if(root == null){
+                return;
+            }
+    
+            list.add(root.val);
+            preOrder(root.left);
+            preOrder(root.right);
+        }
+    
+        /**
+         * 中序遍历
+         * @param root
+         */
+        private void inOrder(TreeNode root){
+            if(root == null){
+                return;
+            }
+    
+            inOrder(root.left);
+            list.add(root.val);
+            inOrder(root.right);
+        }
+    
+        /**
+         * 后序遍历
+         * @param root
+         */
+        private void postOrder(TreeNode root){
+            if(root == null){
+                return;
+            }
+    
+            postOrder(root.left);
+            postOrder(root.right);
+            list.add(root.val);
+        }
+    
+        //////////////////////////////////////////////////////////////////////////////////////
+    
+        /**
+         * 迭代法
+         * @param root
+         * @return
+         */
+        private int[][] solution2(TreeNode root){
+            operate(root);
+    
+            int n = list.size()/3;
+            int[][] results = new int[3][n];
+            for(int i=0; i<3; i++){
+                for(int j=0; j<n; j++){
+                    results[i][j] = list.get(i*n+j);
+                }
+            }
+    
+            return results;
+        }
+    
+        /**
+         * 按序运行: 前序 -> 中序 -> 后序
+         * @param root
+         */
+        private void operate(TreeNode root){
+            preorder(root);
+            inorder(root);
+            postorder(root);
+        }
+    
+        /**
+         * 前序遍历: 栈
+         * @param root
+         * @return
+         */
+        private void preorder(TreeNode root){
+            Stack<TreeNode> stack = new Stack<>();
+    
+            if(root == null){
+                return;
+            }
+    
+            stack.push(root);
+    
+            TreeNode node;
+            while(!stack.isEmpty()){
+                node = stack.pop();
+                list.add(node.val);
+                if(node.right != null){
+                    stack.push(node.right);
+                }
+                if(node.left != null){
+                    stack.push(node.left);
+                }
+            }
+        }
+    
+        /**
+         * 中序遍历: 栈
+         * @param root
+         * @return
+         */
+        private void inorder(TreeNode root){
+            Stack<TreeNode> stack = new Stack<>();
+    
+            TreeNode curr;
+            while(root!=null || !stack.isEmpty()){
+                // 最左边
+                while(root != null){
+                    stack.push(root);
+                    root = root.left;
+                }
+    
+                curr = stack.pop();
+                list.add(curr.val);
+    
+                root = curr.right;
+            }
+        }
+    
+        /**
+         * 后序遍历: 栈
+         * @param root
+         * @return
+         */
+        private void postorder(TreeNode root){
+            Stack<TreeNode> stack = new Stack<>();
+    
+            TreeNode curr;
+            // 上次访问
+            TreeNode last = null;
+            while(root!=null || !stack.isEmpty()){
+                // 最左边
+                while(root != null){
+                    stack.push(root);
+                    root = root.left;
+                }
+    
+                curr = stack.pop();
+                // 右节点为空或已访问
+                if(curr.right==null || curr.right==last){
+                    // 访问当前节点
+                    list.add(curr.val);
+                    last = curr;
+                }
+                // 右节点非空且未访问
+                else{
+                    // 当前节点再次入栈
+                    stack.push(curr);
+                    root = curr.right;
+                }
+            }
+        }
+    }
+
+  
+

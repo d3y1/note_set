@@ -1,0 +1,161 @@
+# java-NC279 二叉树的下一个结点
+
+
+    import java.util.*;
+    /*
+    public class TreeLinkNode {
+        int val;
+        TreeLinkNode left = null;
+        TreeLinkNode right = null;
+        TreeLinkNode next = null;
+    
+        TreeLinkNode(int val) {
+            this.val = val;
+        }
+    }
+    */
+    
+    /**
+     * NC279 二叉树的下一个结点
+     * @author d3y1
+     */
+    public class Solution {
+        public TreeLinkNode GetNext(TreeLinkNode pNode){
+            // return solution1(pNode);
+            return solution11(pNode);
+            // return solution2(pNode);
+        }
+    
+        private TreeLinkNode pre;
+        private TreeLinkNode result;
+    
+        /**
+         * 递归: 中序遍历
+         * @param pNode
+         * @return
+         */
+        private TreeLinkNode solution1(TreeLinkNode pNode){
+            if(pNode == null){
+                return null;
+            }
+    
+            // 找到 根节点
+            TreeLinkNode root = pNode;
+            while(root.next != null){
+                root = root.next;
+            }
+    
+            inOrder(root, pNode);
+    
+            return result;
+        }
+    
+        /**
+         * 中序遍历
+         * @param root
+         * @param pNode
+         */
+        private void inOrder(TreeLinkNode root, TreeLinkNode pNode){
+            if(result != null){
+                return;
+            }
+            if(root == null){
+                return;
+            }
+    
+            inOrder(root.left, pNode);
+            if(pre == null){
+                pre = root;
+            }else{
+                if(pre.equals(pNode)){
+                    result = root;
+                    pre = root;
+                    return;
+                }else{
+                    pre = root;
+                }
+            }
+            inOrder(root.right, pNode);
+        }
+    
+        /**
+         * 递归: 中序遍历
+         * @param pNode
+         * @return
+         */
+        private TreeLinkNode solution11(TreeLinkNode pNode){
+            if(pNode == null){
+                return null;
+            }
+    
+            // 找到 根节点
+            TreeLinkNode root = pNode;
+            while(root.next != null){
+                root = root.next;
+            }
+    
+            inorder(root, pNode);
+    
+            return result;
+        }
+    
+        /**
+         * 中序遍历
+         * @param root
+         * @param pNode
+         */
+        private void inorder(TreeLinkNode root, TreeLinkNode pNode){
+            if(result != null){
+                return;
+            }
+            if(root == null){
+                return;
+            }
+    
+            inorder(root.left, pNode);
+            if(pre == pNode){
+                result = root;
+                pre = root;
+                return;
+            }else{
+                pre = root;
+            }
+            inorder(root.right, pNode);
+        }
+    
+        /**
+         * 迭代: 分别考虑各种情况
+         * @param pNode
+         * @return
+         */
+        private TreeLinkNode solution2(TreeLinkNode pNode){
+            if(pNode == null){
+                return null;
+            }
+    
+            // 有右子树
+            if(pNode.right != null){
+                pNode = pNode.right;
+                while(pNode.left != null){
+                    pNode = pNode.left;
+                }
+                return pNode;
+            }
+            // 无右子树
+            else{
+                while(pNode.next != null){
+                    // 当前节点的父节点的左子节点 即是 当前节点
+                    if(pNode.next.left == pNode){
+                        return pNode.next;
+                    }
+                    pNode = pNode.next;
+                }
+            }
+    
+            return null;
+        }
+    }
+    
+
+  
+

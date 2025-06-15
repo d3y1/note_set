@@ -1,0 +1,203 @@
+# java-NC394 删除升序数组的重复元素(二)
+
+
+    import java.util.*;
+    
+    /**
+     * NC394 删除升序数组的重复元素(二)
+     * @author d3y1
+     */
+    public class Solution {
+        // 重复次数
+        private final int K = 2;
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组
+         * @return int整型
+         */
+        public int removenums (ArrayList<Integer> nums) {
+            // return solution1(nums);
+            // return solution2(nums);
+            // return solution3(nums);
+            // return solution4(nums);
+            // return solution5(nums);
+            // return solution6(nums);
+            return solution7(nums);
+        }
+    
+        /**
+         * 新增法(add): 未通过(非原地修改nums数组!)
+         * @param nums
+         * @return
+         */
+        private int solution1(ArrayList<Integer> nums){
+            HashMap<Integer,Integer> map = new HashMap<>();
+            ArrayList<Integer> list = new ArrayList<>();
+            int cnt;
+            for(int num: nums){
+                cnt = map.getOrDefault(num, 0);
+                if(cnt < K){
+                    list.add(num);
+                    map.put(num, cnt+1);
+                }
+            }
+    
+            return list.size();
+        }
+    
+        /**
+         * 删除法(remove): Iterator+HashMap
+         * @param nums
+         * @return
+         */
+        private int solution2(ArrayList<Integer> nums){
+            HashMap<Integer,Integer> map = new HashMap<>();
+            int num,cnt;
+            Iterator<Integer> it = nums.iterator();
+            while(it.hasNext()){
+                num = it.next();
+                cnt = map.getOrDefault(num, 0);
+                if(cnt < K){
+                    map.put(num, cnt+1);
+                }else{
+                    it.remove();
+                }
+            }
+    
+            return nums.size();
+        }
+    
+        /**
+         * 删除法(remove): Iterator
+         * 利用 "有序数组" 属性
+         * @param nums
+         * @return
+         */
+        private int solution3(ArrayList<Integer> nums){
+            int cur = nums.get(0);
+            int num,cnt=0;
+            Iterator<Integer> it = nums.iterator();
+            while(it.hasNext()){
+                num = it.next();
+                if(num == cur){
+                    if(cnt < K){
+                        cnt++;
+                    }else{
+                        it.remove();
+                    }
+                }else{
+                    cur = num;
+                    cnt = 1;
+                }
+            }
+    
+            return nums.size();
+        }
+    
+        /**
+         * 删除法(remove): index(从后往前遍历)
+         * @param nums
+         * @return
+         */
+        private int solution4(ArrayList<Integer> nums){
+            int n = nums.size();
+            int cnt = 1;
+            for(int i=n-2; i>=0; i--){
+                if(nums.get(i).equals(nums.get(i+1))){
+                    if(cnt < K){
+                        cnt++;
+                    }else{
+                        nums.remove(i);
+                    }
+                }else{
+                    cnt = 1;
+                }
+            }
+    
+            return nums.size();
+        }
+    
+        /**
+         * 删除法(remove): index(从前往后遍历)
+         * @param nums
+         * @return
+         */
+        private int solution5(ArrayList<Integer> nums){
+            int n = nums.size();
+            int cnt = 1;
+            for(int i=1; i<n; i++){
+                if(nums.get(i-1).equals(nums.get(i))){
+                    if(cnt < K){
+                        cnt++;
+                    }else{
+                        nums.remove(i);
+                        n--;
+                        i--;
+                    }
+                }else{
+                    cnt = 1;
+                }
+            }
+    
+            return nums.size();
+        }
+    
+        /**
+         * 更新法(set): 双指针
+         * @param nums
+         * @return
+         */
+        private int solution6(ArrayList<Integer> nums){
+            int n = nums.size();
+            int cnt = 1;
+            // 双指针
+            int i = 1;
+            for(int j=1; j<n; j++){
+                if(nums.get(j-1).equals(nums.get(j))){
+                    if(cnt < K){
+                        cnt++;
+                        nums.set(i, nums.get(j));
+                        i++;
+                    }
+                }else{
+                    cnt = 1;
+                    nums.set(i, nums.get(j));
+                    i++;
+                }
+            }
+    
+            return i;
+        }
+    
+        /**
+         * 更新法(set): 双指针
+         * @param nums
+         * @return
+         */
+        private int solution7(ArrayList<Integer> nums){
+            int n = nums.size();
+            int cnt = 1;
+            // 双指针
+            int i = 0;
+            for(int j=1; j<n; j++){
+                if(nums.get(j-1).equals(nums.get(j))){
+                    if(cnt < K){
+                        cnt++;
+                        i++;
+                        nums.set(i, nums.get(j));
+                    }
+                }else{
+                    cnt = 1;
+                    i++;
+                    nums.set(i, nums.get(j));
+                }
+            }
+    
+            return i+1;
+        }
+    }
+
+  
+

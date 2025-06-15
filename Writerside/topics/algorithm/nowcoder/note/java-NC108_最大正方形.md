@@ -1,0 +1,90 @@
+# java-NC108 最大正方形
+
+
+    import java.util.*;
+    
+    /**
+     * NC108 最大正方形
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         * 最大正方形
+         * @param matrix char字符型二维数组
+         * @return int整型
+         */
+        public int solve (char[][] matrix) {
+            return solution(matrix);
+        }
+    
+        /**
+         * 动态规划
+         *
+         * dp[i][j]表示以位置(i,j)(第i行第j列)为右下角的全1正方形的最大边长
+         *
+         * 举例子找规律:
+         * 原矩阵1
+         * i/j 1 2 3 4 5
+         *  1  0 1 1 1 0
+         *  2  1 1 1 1 0
+         *  3  0 1 1 1 1
+         *  4  0 1 1 1 1
+         *  5  0 0 1 1 1
+         * 
+         * dp矩阵1
+         * i/j 1 2 3 4 5
+         *  1  0 1 1 1 0
+         *  2  1 1 2 2 0
+         *  3  0 1 2 3 1
+         *  4  0 1 2 3 2
+         *  5  0 0 1 2 3
+         *
+         * --------------------------------
+         *
+         * 原矩阵2
+         * i/j 1 2 3 4 5
+         *  1  1 0 1 0 0
+         *  2  1 0 1 1 1
+         *  3  1 1 1 1 1
+         *  4  1 0 0 1 0
+         *
+         * dp矩阵2
+         * i/j 1 2 3 4 5
+         *  1  1 0 1 0 0
+         *  2  1 0 1 1 1
+         *  3  1 1 1 2 2
+         *  4  1 0 0 1 0
+         *  
+         * 可见递推式:
+         * dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1]))+1    (matrix[i-1][j-1] == '1')
+         * 
+         * @param matrix
+         * @return
+         */
+        private int solution(char[][] matrix){
+            int row = matrix.length;
+            if(row == 0){
+                return 0;
+            }
+            int col = matrix[0].length;
+    
+            int[][] dp = new int[row+1][col+1];
+            // 最大边长
+            int edge = 0;
+            for(int i=1; i<=row; i++){
+                for(int j=1; j<=col; j++){
+                    if(matrix[i-1][j-1] == '1'){
+                        dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1]))+1;
+                        edge = Math.max(edge, dp[i][j]);
+                    }
+                }
+            }
+    
+            return edge*edge;
+        }
+    }
+
+  
+

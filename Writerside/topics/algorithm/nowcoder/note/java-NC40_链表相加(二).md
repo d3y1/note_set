@@ -1,0 +1,142 @@
+# java-NC40 链表相加(二)
+
+
+    import java.util.*;
+    
+    /*
+     * public class ListNode {
+     *   int val;
+     *   ListNode next = null;
+     *   public ListNode(int val) {
+     *     this.val = val;
+     *   }
+     * }
+     */
+    
+    /**
+     * NC40 链表相加(二)
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param head1 ListNode类
+         * @param head2 ListNode类
+         * @return ListNode类
+         */
+        public ListNode addInList (ListNode head1, ListNode head2) {
+            return solution1(head1, head2);
+            // return solution2(head1, head2);
+        }
+    
+        /**
+         * 反转链表
+         * @param head1
+         * @param head2
+         * @return
+         */
+        private ListNode solution1(ListNode head1, ListNode head2) {
+            ListNode dummyHead = new ListNode(-1);
+            
+            head1 = reverse(head1);
+            head2 = reverse(head2);
+            
+            ListNode curr1,curr2;
+            curr1 = head1;
+            curr2 = head2;
+            int val1,val2,sum;
+            int carry = 0;
+            ListNode node;
+            while(curr1!=null || curr2!=null || carry>0){
+                val1 = 0;
+                val2 = 0;
+                if(curr1 != null){
+                    val1 = curr1.val;
+                    curr1 = curr1.next;
+                }
+                if(curr2 != null){
+                    val2 = curr2.val;
+                    curr2 = curr2.next;
+                }
+                sum = val1+val2+carry;
+                carry = sum/10;
+                node = new ListNode(sum%10);
+                node.next = dummyHead.next;
+                dummyHead.next = node;
+            }
+    
+            return dummyHead.next;
+        }
+    
+        /**
+         * 反转
+         * @param head
+         * @return
+         */
+        private ListNode reverse(ListNode head){
+            ListNode dummyHead = new ListNode(-1);
+            ListNode curr,next;
+            curr = head;
+            while(curr != null){
+                next = curr.next;
+                curr.next = dummyHead.next;
+                dummyHead.next = curr;
+                curr = next;
+            }
+    
+            return dummyHead.next;
+        }
+    
+        /**
+         * 栈
+         * @param head1
+         * @param head2
+         * @return
+         */
+        private ListNode solution2(ListNode head1, ListNode head2) {
+            ListNode dummyHead = new ListNode(-1);
+            
+            Stack<Integer> stack1 = new Stack<>();
+            Stack<Integer> stack2 = new Stack<>();
+            
+            ListNode curr;
+            
+            curr = head1;
+            while(curr != null){
+                stack1.push(curr.val);
+                curr = curr.next;
+            }
+            
+            curr = head2;
+            while(curr != null){
+                stack2.push(curr.val);
+                curr = curr.next;
+            }
+    
+            int val1,val2,sum;
+            int carry = 0;
+            ListNode node;
+            while(!stack1.isEmpty() || !stack2.isEmpty() || carry>0){
+                val1 = 0;
+                val2 = 0;
+                if(!stack1.isEmpty()){
+                    val1 = stack1.pop();
+                }
+                if(!stack2.isEmpty()){
+                    val2 = stack2.pop();
+                }
+                sum = val1+val2+carry;
+                carry = sum/10;
+                node = new ListNode(sum%10);
+                node.next = dummyHead.next;
+                dummyHead.next = node;
+            }
+            
+            return dummyHead.next;
+        }
+    }
+
+  
+

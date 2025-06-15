@@ -1,0 +1,215 @@
+# java-NC202 长度最小的连续子数组
+
+
+    import java.util.*;
+    
+    /**
+     * NC202 长度最小的连续子数组
+     * @author d3y1
+     */
+    public class Solution {
+        /**
+         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+         *
+         *
+         * @param nums int整型一维数组 
+         * @param target int整型 
+         * @return int整型
+         */
+        public int minSubarray (int[] nums, int target) {
+            // return solution1(nums, target);
+            // return solution2(nums, target);
+            return solution3(nums, target);
+            // return solution4(nums, target);
+        }
+    
+        /**
+         * 前缀和 + 双指针(滑动窗口)
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution1(int[] nums, int target){
+            int n = nums.length;
+    
+            // 前缀和: pre[i]表示前i项的和
+            int[] pre = new int[n+1];
+            int val;
+            for(int i=1; i<=n; i++){
+                val = nums[i-1];
+                if(val >= target){
+                    return 1;
+                }
+                pre[i] = pre[i-1]+val;
+            }
+            if(pre[n] < target){
+                return 0;
+            }
+    
+            int sum;
+            int result = Integer.MAX_VALUE;
+            // 双指针(滑动窗口)
+            for(int i=0,j=1; i<=j&&j<=n;){
+                sum = pre[j]-pre[i];
+                if(sum >= target){
+                    result = Math.min(result, j-i);
+                    i++;
+                }else{
+                    j++;
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 前缀和 + 双指针(滑动窗口) + 二分
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution2(int[] nums, int target){
+            int n = nums.length;
+    
+            // 前缀和: pre[i]表示前i项的和
+            int[] pre = new int[n+1];
+            int val;
+            for(int i=1; i<=n; i++){
+                val = nums[i-1];
+                if(val >= target){
+                    return 1;
+                }
+                pre[i] = pre[i-1]+val;
+            }
+            if(pre[n] < target){
+                return 0;
+            }
+    
+            // 二分 <- 前缀数组pre 单调增
+            // 快速找到第一个满足条件的位置
+            int left = 1;
+            int right = n;
+            int mid;
+            while(left <= right){
+                mid = (left+right)/2;
+                if(pre[mid] < target){
+                    left = mid + 1;
+                }else{
+                    right = mid - 1;
+                }
+            }
+    
+            int sum;
+            int result = Integer.MAX_VALUE;
+            // 双指针(滑动窗口)
+            for(int i=0,j=left; i<=j&&j<=n;){
+                sum = pre[j]-pre[i];
+                if(sum >= target){
+                    result = Math.min(result, j-i);
+                    i++;
+                }else{
+                    j++;
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 前缀和 + 二分
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution3(int[] nums, int target){
+            int n = nums.length;
+    
+            // 前缀和: pre[i]表示前i项的和
+            int[] pre = new int[n+1];
+            int val;
+            for(int i=1; i<=n; i++){
+                val = nums[i-1];
+                if(val >= target){
+                    return 1;
+                }
+                pre[i] = pre[i-1]+val;
+            }
+            if(pre[n] < target){
+                return 0;
+            }
+    
+            // 二分 <- 前缀数组pre 单调增
+            int result = Integer.MAX_VALUE;
+            for(int i=0; i<n; i++){
+                int left = i;
+                int right = n;
+                int mid;
+                while(left <= right){
+                    mid = (left+right)/2;
+                    // 关键
+                    if(pre[mid] < pre[i]+target){
+                        left = mid + 1;
+                    }else{
+                        right = mid - 1;
+                    }
+                }
+                if(left <= n){
+                    result = Math.min(result, left-i);
+                }
+            }
+    
+            return result;
+        }
+    
+        /**
+         * 前缀和 + 二分
+         * @param nums
+         * @param target
+         * @return
+         */
+        private int solution4(int[] nums, int target){
+            int n = nums.length;
+    
+            // 前缀和: pre[i]表示前i项的和
+            int[] pre = new int[n+1];
+            int val;
+            for(int i=1; i<=n; i++){
+                val = nums[i-1];
+                if(val >= target){
+                    return 1;
+                }
+                pre[i] = pre[i-1]+val;
+            }
+            if(pre[n] < target){
+                return 0;
+            }
+    
+            // 二分 <- 子数组长度
+            int left = 1;
+            int right = n;
+            int mid;
+            while(left <= right){
+                mid = (left+right)/2;
+                boolean found = false;
+                for(int i=0,j=i+mid; j<=n; i++,j++){
+                    if(pre[j]-pre[i] >= target){
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found){
+                    left = mid + 1;
+                }else{
+                    right = mid - 1;
+                }
+            }
+    
+            // left>n => 不存在满足条件的子数组
+            int result = left>n?0:left;
+    
+            return result;
+        }
+    }
+
+  
+
