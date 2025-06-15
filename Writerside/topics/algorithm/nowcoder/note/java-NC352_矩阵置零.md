@@ -50,19 +50,6 @@ public class Solution {
             }
         }
 
-        // 行置0
-        // for(int row: rowSet){
-        //     for(int col=0; col<m; col++){
-        //         matrix.get(row).set(col, 0);
-        //     }
-        // }
-        // 列置0
-        // for(int col: colSet){
-        //     for(int row=0; row<n; row++){
-        //         matrix.get(row).set(col, 0);
-        //     }
-        // }
-
         // 行列置0
         for(int row=0; row<n; row++){
             for(int col=0; col<m; col++){

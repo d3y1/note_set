@@ -9,8 +9,6 @@ import java.util.*;
  */
 public class Solution {
     /**
-     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
-     * <p>
      * 相似 -> NC252 多数组中位数     [nowcoder]
      * 相似 -> NC131 数据流中的中位数  [nowcoder]
      *
@@ -19,108 +17,12 @@ public class Solution {
      * @return double浮点型ArrayList
      */
     public ArrayList<Double> slidewindow(ArrayList<Integer> nums, int k) {
-        // return solution1(nums, k);
         // return solution2(nums, k);
         return solution3(nums, k);
     }
 
     /**
-     * 双堆+双指针: 超时!
-     *
-     * @param nums
-     * @param k
-     * @return
-     */
-    private ArrayList<Double> solution1(ArrayList<Integer> nums, int k) {
-        int n = nums.size();
-        if (n < k) {
-            return new ArrayList<>();
-        }
-
-        ArrayList<Double> list = new ArrayList<>();
-
-        // 双堆
-        TwoHeap th = new TwoHeap(k);
-        for (int i = 0; i < k; i++) {
-            th.addToHeap(nums.get(i));
-        }
-        list.add(th.getMedian());
-
-        // 双指针
-        for (int i = 0, j = k; j < n; i++, j++) {
-            th.addToHeap(nums.get(j));
-            th.removeFromHeap(nums.get(i));
-            list.add(th.getMedian());
-        }
-
-        return list;
-    }
-
-    /**
-     * 双堆
-     */
-    private class TwoHeap {
-        // 大根堆 维护较小的一半元素
-        private PriorityQueue<Integer> maxHeap;
-        // 小根堆 维护较大的一半元素
-        private PriorityQueue<Integer> minHeap;
-        // 滑动窗口大小
-        private int k;
-
-        public TwoHeap(int k) {
-            this.maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
-            this.minHeap = new PriorityQueue<>();
-            this.k = k;
-        }
-
-        private void addToHeap(int num) {
-            if (minHeap.size() == maxHeap.size()) {
-                minHeap.offer(num);
-                maxHeap.offer(minHeap.poll());
-            } else {
-                maxHeap.offer(num);
-                minHeap.offer(maxHeap.poll());
-            }
-        }
-
-        private void removeFromHeap(int num) {
-            if (num <= maxHeap.peek()) {
-                if (minHeap.size() == maxHeap.size()) {
-                    maxHeap.remove(num);
-                    maxHeap.offer(minHeap.poll());
-                } else {
-                    maxHeap.remove(num);
-                }
-            } else {
-                if (minHeap.size() == maxHeap.size()) {
-                    minHeap.remove(num);
-                } else {
-                    minHeap.remove(num);
-                    minHeap.offer(maxHeap.poll());
-                }
-            }
-        }
-
-        /**
-         * 获取中位数
-         *
-         * @return
-         */
-        private double getMedian() {
-            // if(k%2 == 0){
-            if ((k & 1) == 0) {
-                return (minHeap.peek() + maxHeap.peek()) / 2.0;
-            } else {
-                return maxHeap.peek();
-            }
-        }
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
      * 双堆+双指针+哈希(延迟删除)
-     *
      * @param nums
      * @param k
      * @return
@@ -176,7 +78,6 @@ public class Solution {
 
         /**
          * 获取中位数
-         *
          * @return
          */
         public double getMedian() {
@@ -185,7 +86,6 @@ public class Solution {
 
         /**
          * 新增元素
-         *
          * @param num
          */
         public void insert(int num) {
@@ -204,7 +104,6 @@ public class Solution {
 
         /**
          * 假删元素: 哈希表实现(延迟删除)
-         *
          * @param num
          */
         public void delete(int num) {
@@ -247,7 +146,6 @@ public class Solution {
         /**
          * 修剪: 真删元素
          * 不断地弹出 heap 的堆顶元素, 并且更新哈希表
-         *
          * @param heap
          */
         private void prune(PriorityQueue<Integer> heap) {
@@ -266,11 +164,8 @@ public class Solution {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * 双堆+双指针+哈希(延迟删除): 优化
-     *
      * @param nums
      * @param k
      * @return
@@ -335,7 +230,6 @@ public class Solution {
 
         /**
          * 新增元素
-         *
          * @param num
          */
         public void insert(int num) {
@@ -352,7 +246,6 @@ public class Solution {
 
         /**
          * 假删元素: 哈希表实现(延迟删除)
-         *
          * @param num
          */
         public void delete(int num) {
@@ -375,7 +268,6 @@ public class Solution {
         /**
          * 修剪: 真删元素
          * 不断地弹出 heap 的堆顶元素, 并且更新哈希表
-         *
          * @param heap
          */
         private void prune(PriorityQueue<Integer> heap) {
