@@ -1,293 +1,291 @@
 # java-NC221 集合的所有子集(二)
 
+```java
+import java.util.*;
 
-    import java.util.*;
-    
+/**
+ * NC221 集合的所有子集(二)
+ * @author d3y1
+ */
+public class Solution {
+    private ArrayList<Integer> list = new ArrayList<>();
+    private ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+    private HashSet<ArrayList<Integer>> set = new HashSet<>();
+
     /**
-     * NC221 集合的所有子集(二)
-     * @author d3y1
-     */
-    public class Solution {
-        private ArrayList<Integer> list = new ArrayList<>();
-        private ArrayList<ArrayList<Integer>> result = new ArrayList<>();
-        private HashSet<ArrayList<Integer>> set = new HashSet<>();
-    
-        /**
-         * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
-         *
-         * 相似 -> NC27 集合的所有子集(一) [nowcoder]
-         *
-         * @param nums int整型一维数组
-         * @return int整型ArrayList<ArrayList<>>
-         */
-        public ArrayList<ArrayList<Integer>> subsets (int[] nums) {
-            return solution1(nums);
-            // return solution2(nums);
-            // return solution22(nums);
-            // return solution222(nums);
-            // return solution3(nums);
-            // return solution33(nums);
-        }
-    
-        /**
-         * 位运算
-         *
-         * 考虑数组[1,2,2], 选择前两个数, 或者第一、三个数, 都会得到相同的子集.
-         *
-         * 也就是说, 对于当前选择的数x, 若前面有与其相同的数y, 且没有选择y, 此时包含x的子集, 必然会出现在包含y的所有子集中.
-         *
-         * 我们可以通过判断这种情况, 来避免生成重复的子集.
-         * 代码实现时, 可以先将数组排序; 迭代时, 若发现没有选择上一个数, 且当前数与上一个数相同, 则可以跳过当前生成的子集.
-         *
-         * @param S
-         * @return
-         */
-        private ArrayList<ArrayList<Integer>> solution1(int[] S){
-            int n = S.length;
-            if(n == 0){
-                return new ArrayList<>();
-            }
-    
-            Arrays.sort(S);
-    
-            boolean flag;
-            for(int mask=0; mask<(1<<n); mask++){
-                list.clear();
-                flag = true;
-                for(int j=0; j<n; j++){
-                    if(((mask>>j)&1) == 1){
-                        // 没有选择上一个数, 且当前数与上一个数相同
-                        if(j>0 && (((mask>>(j-1))&1)==0) && S[j]==S[j-1]){
-                            flag = false;
-                            break;
-                        }
-                        list.add(S[j]);
-                    }
-                }
-                if(flag){
-                    result.add(new ArrayList<>(list));
-                }
-            }
-    
-            sort(result);
-    
-            return result;
-        }
-    
-        /**
-         * 回溯法
-         * @param S
-         * @return
-         */
-        private ArrayList<ArrayList<Integer>> solution2(int[] S){
-            int n = S.length;
-            if(n == 0){
-                return new ArrayList<>();
-            }
-    
-            Arrays.sort(S);
-            backtrack2(S, 0, new ArrayList<>());
-    
-            return result;
-        }
-    
-        /**
-         * 回溯: 递归遍历解空间
-         * @param S
-         * @param idx
-         * @param list
-         */
-        private void backtrack2(int[] S, int idx, ArrayList<Integer> list){
-            if(!set.contains(list)){
-                result.add(list);
-                set.add(list);
-            }
-            ArrayList<Integer> newList;
-            for(int i=idx; i<S.length; i++){
-                newList = new ArrayList<>(list);
-                newList.add(S[i]);
-                backtrack2(S, i+1, newList);
-            }
-        }
-    
-        /**
-         * 回溯法
-         * @param S
-         * @return
-         */
-        private ArrayList<ArrayList<Integer>> solution22(int[] S){
-            int n = S.length;
-            if(n == 0){
-                return new ArrayList<>();
-            }
-    
-            Arrays.sort(S);
-            backtrack22(S, 0, new ArrayList<>());
-    
-            return result;
-        }
-    
-        /**
-         * 回溯: 递归遍历解空间
-         * @param S
-         * @param idx
-         * @param list
-         */
-        private void backtrack22(int[] S, int idx, ArrayList<Integer> list){
-            if(!set.contains(list)){
-                result.add(new ArrayList<>(list));
-                set.add(new ArrayList<>(list));
-            }
-            for(int i=idx; i<S.length; i++){
-                list.add(S[i]);
-                backtrack22(S, i+1, list);
-                list.remove(list.size()-1);
-            }
-        }
-    
-        /**
-         * 回溯法
-         * @param S
-         * @return
-         */
-        private ArrayList<ArrayList<Integer>> solution222(int[] S){
-            int n = S.length;
-            if(n == 0){
-                return new ArrayList<>();
-            }
-    
-            Arrays.sort(S);
-            backtrack222(S, 0);
-    
-            return result;
-        }
-    
-        /**
-         * 回溯: 递归遍历解空间
-         * @param S
-         * @param idx
-         */
-        private void backtrack222(int[] S, int idx){
-            result.add(new ArrayList<>(list));
-            for(int i=idx; i<S.length; i++){
-                // 没有选择上一个数, 且当前数与上一个数相同
-                if(i>idx && S[i]==S[i-1]){
-                    continue;
-                }
-                list.add(S[i]);
-                backtrack222(S, i+1);
-                list.remove(list.size()-1);
-            }
-        }
-    
-        /**
-         * 回溯法
-         * @param S
-         * @return
-         */
-        private ArrayList<ArrayList<Integer>> solution3(int[] S){
-            int n = S.length;
-            if(n == 0){
-                return new ArrayList<>();
-            }
-    
-            Arrays.sort(S);
-            backtrack3(S, 0);
-            sort(result);
-    
-            return result;
-        }
-    
-        /**
-         * 回溯: 递归遍历解空间
-         * @param S
-         * @param idx
-         */
-        private void backtrack3(int[] S, int idx){
-            if(idx == S.length){
-                result.add(new ArrayList<Integer>(list));
-                return;
-            }
-    
-            list.add(S[idx]);
-            backtrack3(S, idx+1);
-            list.remove(list.size()-1);
-            // 没有选择当前数(上面remove()), 且下一个数与当前数相同
-            while(idx<S.length-1 && S[idx]==S[idx+1]){
-                idx++;
-            }
-            backtrack3(S, idx+1);
-        }
-    
-        /**
-         * 回溯法
-         * @param S
-         * @return
-         */
-        private ArrayList<ArrayList<Integer>> solution33(int[] S){
-            int n = S.length;
-            if(n == 0){
-                return new ArrayList<>();
-            }
-    
-            Arrays.sort(S);
-            backtrack33(S, 0, false);
-            sort(result);
-    
-            return result;
-        }
-    
-        /**
-         * 回溯: 递归遍历解空间
-         * @param S
-         * @param idx
-         * @param choosePre
-         */
-        private void backtrack33(int[] S, int idx, boolean choosePre){
-            if(idx == S.length){
-                result.add(new ArrayList<Integer>(list));
-                return;
-            }
-    
-            backtrack33(S, idx+1, false);
-            // 没有选择上一个数, 且当前数与上一个数相同
-            if(!choosePre && idx>0 && S[idx]==S[idx-1]){
-                return;
-            }
-            list.add(S[idx]);
-            backtrack33(S, idx+1, true);
-            list.remove(list.size()-1);
-        }
-    
-        /**
-         * 排序结果集: 按字典序
-         * @param result
-         */
-        private void sort(ArrayList<ArrayList<Integer>> result){
-            // Collections.sort(result, new Comparator<ArrayList<Integer>>(){
-            //     @Override
-            //     public int compare(ArrayList<Integer> o1, ArrayList<Integer> o2){
-            //         int len = Math.min(o1.size(), o2.size());
-            //         for(int i=0; i<len; i++){
-            //             if(o1.get(i) != o2.get(i)){
-            //                 return o1.get(i)-o2.get(i);
-            //             }
-            //         }
-            //         return o1.size()-o2.size();
-            //     }
-            // });
-    
-            Collections.sort(result, (o1, o2) -> {
-                int len = Math.min(o1.size(), o2.size());
-                for(int i=0; i<len; i++){
-                    if(!o1.get(i).equals(o2.get(i))){
-                        return o1.get(i)-o2.get(i);
-                    }
-                }
-                return o1.size()-o2.size();
-            });
-        }
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     *
+     * 相似 -> NC27 集合的所有子集(一) [nowcoder]
+     *
+     * @param nums int整型一维数组
+     * @return int整型ArrayList<ArrayList<>>
+     */
+    public ArrayList<ArrayList<Integer>> subsets (int[] nums) {
+        return solution1(nums);
+        // return solution2(nums);
+        // return solution22(nums);
+        // return solution222(nums);
+        // return solution3(nums);
+        // return solution33(nums);
     }
 
-  
+    /**
+     * 位运算
+     *
+     * 考虑数组[1,2,2], 选择前两个数, 或者第一、三个数, 都会得到相同的子集.
+     *
+     * 也就是说, 对于当前选择的数x, 若前面有与其相同的数y, 且没有选择y, 此时包含x的子集, 必然会出现在包含y的所有子集中.
+     *
+     * 我们可以通过判断这种情况, 来避免生成重复的子集.
+     * 代码实现时, 可以先将数组排序; 迭代时, 若发现没有选择上一个数, 且当前数与上一个数相同, 则可以跳过当前生成的子集.
+     *
+     * @param S
+     * @return
+     */
+    private ArrayList<ArrayList<Integer>> solution1(int[] S){
+        int n = S.length;
+        if(n == 0){
+            return new ArrayList<>();
+        }
 
+        Arrays.sort(S);
+
+        boolean flag;
+        for(int mask=0; mask<(1<<n); mask++){
+            list.clear();
+            flag = true;
+            for(int j=0; j<n; j++){
+                if(((mask>>j)&1) == 1){
+                    // 没有选择上一个数, 且当前数与上一个数相同
+                    if(j>0 && (((mask>>(j-1))&1)==0) && S[j]==S[j-1]){
+                        flag = false;
+                        break;
+                    }
+                    list.add(S[j]);
+                }
+            }
+            if(flag){
+                result.add(new ArrayList<>(list));
+            }
+        }
+
+        sort(result);
+
+        return result;
+    }
+
+    /**
+     * 回溯法
+     * @param S
+     * @return
+     */
+    private ArrayList<ArrayList<Integer>> solution2(int[] S){
+        int n = S.length;
+        if(n == 0){
+            return new ArrayList<>();
+        }
+
+        Arrays.sort(S);
+        backtrack2(S, 0, new ArrayList<>());
+
+        return result;
+    }
+
+    /**
+     * 回溯: 递归遍历解空间
+     * @param S
+     * @param idx
+     * @param list
+     */
+    private void backtrack2(int[] S, int idx, ArrayList<Integer> list){
+        if(!set.contains(list)){
+            result.add(list);
+            set.add(list);
+        }
+        ArrayList<Integer> newList;
+        for(int i=idx; i<S.length; i++){
+            newList = new ArrayList<>(list);
+            newList.add(S[i]);
+            backtrack2(S, i+1, newList);
+        }
+    }
+
+    /**
+     * 回溯法
+     * @param S
+     * @return
+     */
+    private ArrayList<ArrayList<Integer>> solution22(int[] S){
+        int n = S.length;
+        if(n == 0){
+            return new ArrayList<>();
+        }
+
+        Arrays.sort(S);
+        backtrack22(S, 0, new ArrayList<>());
+
+        return result;
+    }
+
+    /**
+     * 回溯: 递归遍历解空间
+     * @param S
+     * @param idx
+     * @param list
+     */
+    private void backtrack22(int[] S, int idx, ArrayList<Integer> list){
+        if(!set.contains(list)){
+            result.add(new ArrayList<>(list));
+            set.add(new ArrayList<>(list));
+        }
+        for(int i=idx; i<S.length; i++){
+            list.add(S[i]);
+            backtrack22(S, i+1, list);
+            list.remove(list.size()-1);
+        }
+    }
+
+    /**
+     * 回溯法
+     * @param S
+     * @return
+     */
+    private ArrayList<ArrayList<Integer>> solution222(int[] S){
+        int n = S.length;
+        if(n == 0){
+            return new ArrayList<>();
+        }
+
+        Arrays.sort(S);
+        backtrack222(S, 0);
+
+        return result;
+    }
+
+    /**
+     * 回溯: 递归遍历解空间
+     * @param S
+     * @param idx
+     */
+    private void backtrack222(int[] S, int idx){
+        result.add(new ArrayList<>(list));
+        for(int i=idx; i<S.length; i++){
+            // 没有选择上一个数, 且当前数与上一个数相同
+            if(i>idx && S[i]==S[i-1]){
+                continue;
+            }
+            list.add(S[i]);
+            backtrack222(S, i+1);
+            list.remove(list.size()-1);
+        }
+    }
+
+    /**
+     * 回溯法
+     * @param S
+     * @return
+     */
+    private ArrayList<ArrayList<Integer>> solution3(int[] S){
+        int n = S.length;
+        if(n == 0){
+            return new ArrayList<>();
+        }
+
+        Arrays.sort(S);
+        backtrack3(S, 0);
+        sort(result);
+
+        return result;
+    }
+
+    /**
+     * 回溯: 递归遍历解空间
+     * @param S
+     * @param idx
+     */
+    private void backtrack3(int[] S, int idx){
+        if(idx == S.length){
+            result.add(new ArrayList<Integer>(list));
+            return;
+        }
+
+        list.add(S[idx]);
+        backtrack3(S, idx+1);
+        list.remove(list.size()-1);
+        // 没有选择当前数(上面remove()), 且下一个数与当前数相同
+        while(idx<S.length-1 && S[idx]==S[idx+1]){
+            idx++;
+        }
+        backtrack3(S, idx+1);
+    }
+
+    /**
+     * 回溯法
+     * @param S
+     * @return
+     */
+    private ArrayList<ArrayList<Integer>> solution33(int[] S){
+        int n = S.length;
+        if(n == 0){
+            return new ArrayList<>();
+        }
+
+        Arrays.sort(S);
+        backtrack33(S, 0, false);
+        sort(result);
+
+        return result;
+    }
+
+    /**
+     * 回溯: 递归遍历解空间
+     * @param S
+     * @param idx
+     * @param choosePre
+     */
+    private void backtrack33(int[] S, int idx, boolean choosePre){
+        if(idx == S.length){
+            result.add(new ArrayList<Integer>(list));
+            return;
+        }
+
+        backtrack33(S, idx+1, false);
+        // 没有选择上一个数, 且当前数与上一个数相同
+        if(!choosePre && idx>0 && S[idx]==S[idx-1]){
+            return;
+        }
+        list.add(S[idx]);
+        backtrack33(S, idx+1, true);
+        list.remove(list.size()-1);
+    }
+
+    /**
+     * 排序结果集: 按字典序
+     * @param result
+     */
+    private void sort(ArrayList<ArrayList<Integer>> result){
+        // Collections.sort(result, new Comparator<ArrayList<Integer>>(){
+        //     @Override
+        //     public int compare(ArrayList<Integer> o1, ArrayList<Integer> o2){
+        //         int len = Math.min(o1.size(), o2.size());
+        //         for(int i=0; i<len; i++){
+        //             if(o1.get(i) != o2.get(i)){
+        //                 return o1.get(i)-o2.get(i);
+        //             }
+        //         }
+        //         return o1.size()-o2.size();
+        //     }
+        // });
+
+        Collections.sort(result, (o1, o2) -> {
+            int len = Math.min(o1.size(), o2.size());
+            for(int i=0; i<len; i++){
+                if(!o1.get(i).equals(o2.get(i))){
+                    return o1.get(i)-o2.get(i);
+                }
+            }
+            return o1.size()-o2.size();
+        });
+    }
+}
+```
