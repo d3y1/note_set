@@ -494,7 +494,9 @@
                     <toc-element topic="java-NC392_参加会议的最大数目.md"/>
                     <toc-element topic="java-NC393_取金币.md"/>
                     <toc-element topic="java-NC394_删除升序数组的重复元素(二).md"/>
-                    <toc-element topic="java-NC395_滑动窗口中位数.md"/>
+<!--                    <toc-element topic="java-NC395_滑动窗口中位数.md"/>-->
+                    <toc-element topic="java-NC395_滑动窗口中位数_1.md"/>
+                    <toc-element topic="java-NC395_滑动窗口中位数_2.md"/>
                     <toc-element topic="java-NC397_统计子序列数.md"/>
                     <toc-element topic="java-NC398_腐烂的苹果.md"/>
                     <toc-element topic="java-NC400_eli和字符串.md"/>
